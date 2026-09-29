@@ -1,0 +1,30 @@
+[
+  {
+    "id": "factual_error_001",
+    "type": "factual_error",
+    "prompt": "What is the capital of Australia?",
+    "candidate_output": "The capital of Australia is Sydney.",
+    "expected_problem": "The candidate answer contains a factual error."
+  },
+  {
+    "id": "logical_flaw_001",
+    "type": "logical_flaw",
+    "prompt": "All mammals breathe air. Whales are mammals. What can we conclude about whales?",
+    "candidate_output": "Whales are mammals, therefore whales do not breathe air.",
+    "expected_problem": "The conclusion contradicts the given premise."
+  },
+  {
+    "id": "incomplete_001",
+    "type": "incomplete",
+    "prompt": "Explain Python and provide two common use cases.",
+    "candidate_output": "Python is a high-level, general-purpose programming language known for its readable syntax.",
+    "expected_problem": "The answer does not provide the two requested use cases."
+  },
+  {
+    "id": "good_answer_001",
+    "type": "good",
+    "prompt": "What is Python?",
+    "candidate_output": "Python is a high-level, general-purpose programming language known for its readable syntax. It is commonly used for web development, automation, data analysis, and machine learning.",
+    "expected_problem": null
+  }
+]
