@@ -1,0 +1,7 @@
+langgraph
+pydantic
+pydantic-settings
+instructor
+openai
+anthropic
+python-dotenv

@@ -1,103 +1,732 @@
 # LLM Output Arbitration System
 
-## Project Overview
-
-LLM Output Arbitration System is an AI engineering project designed to audit an already-generated Large Language Model (LLM) answer.
-
-Instead of generating another answer, the system evaluates the candidate answer using three independent specialist critics:
-
-1. Factual Accuracy Critic
-2. Logical Consistency Critic
-3. Completeness Critic
-
-The critic reports are collected, disagreements are detected, and an adjudicator produces a final structured verdict.
+An AI engineering system for independently auditing LLM-generated answers, detecting disagreements between specialist critics, and producing an evidence-based final verdict.
 
 ---
 
-## Core System Flow
+## Overview
 
-Candidate LLM Output
-        ↓
-Input Parser
-        ↓
-Parallel Critics
-        ↓
-Critique Collection
-        ↓
-Disagreement Detector
-        ↓
-Adjudicator
-        ↓
+Large Language Models can produce answers that appear convincing while containing factual errors, logical inconsistencies, missing information, or unsupported conclusions.
+
+The **LLM Output Arbitration System** is designed to audit an already-generated LLM response rather than simply generate another response.
+
+Given an original user prompt and a candidate LLM answer, the system evaluates the answer through three independent specialist critics:
+
+1. **Factual Accuracy Critic**
+2. **Logical Consistency Critic**
+3. **Completeness Critic**
+
+The system collects their structured reports, detects disagreements between critics, and sends the evidence to an adjudicator.
+
+The adjudicator produces a structured final verdict containing the overall assessment, confidence, confirmed issues, dismissed flags with reasoning, and a summary.
+
+### Core flow
+
+```text
+Original Prompt + Candidate LLM Output
+                  │
+                  ▼
+            Input Parser
+                  │
+                  ▼
+        ┌─────────┼─────────┐
+        │         │         │
+        ▼         ▼         ▼
+    Factual     Logical   Completeness
+     Critic      Critic      Critic
+        │         │         │
+        └─────────┼─────────┘
+                  ▼
+        Critique Collection
+                  │
+                  ▼
+       Disagreement Detector
+                  │
+                  ▼
+            Adjudicator
+                  │
+                  ▼
+          Final Structured
+              Verdict
+                  │
+          ┌───────┼────────┐
+          ▼       ▼        ▼
+       Database   API    Dashboard
+```
+
+---
+
+## Problem
+
+A single LLM evaluation pass can miss important problems in a candidate answer.
+
+Different evaluation dimensions require different forms of analysis:
+
+* A factual evaluator needs to examine claims and supporting evidence.
+* A logical evaluator needs to examine reasoning, consistency, and conclusions.
+* A completeness evaluator needs to determine whether the answer addressed the full request.
+
+A single evaluator can also disagree with another evaluator.
+
+This project therefore treats answer evaluation as a structured arbitration problem:
+
+```text
+Candidate Answer
+      ↓
+Independent Critics
+      ↓
+Structured Reports
+      ↓
+Disagreement Detection
+      ↓
+Evidence-Based Adjudication
+      ↓
 Final Verdict
-        ↓
-Database / API / Dashboard
+```
 
 ---
 
-## Three Critics
+## Objectives
 
-### Factual Accuracy Critic
+The system is designed to:
 
-Checks whether claims in the candidate answer are factually correct and internally consistent.
-
-### Logical Consistency Critic
-
-Checks whether the reasoning is logically consistent and whether conclusions are supported.
-
-### Completeness Critic
-
-Checks whether the answer addresses all required parts of the original question.
+* Audit an already-generated LLM response.
+* Separate evaluation into independent specialist critics.
+* Produce structured critic reports.
+* Detect disagreements between critics.
+* Preserve evidence behind identified issues.
+* Use an adjudicator to resolve conflicting findings.
+* Produce a structured final verdict.
+* Support single-output and batch arbitration.
+* Maintain an audit trail of arbitration results.
+* Expose the system through an API.
+* Provide a verdict exploration interface.
+* Track critic behavior and disagreement patterns.
+* Support repeatable evaluation using a versioned evaluation dataset.
+* Handle provider, timeout, malformed-output, and other expected failures gracefully.
+* Provide reproducible deployment through Docker.
 
 ---
 
-## Main Features
+## System Inputs
 
-- Multi-agent evaluation
-- Three specialist critics
-- Structured critic reports
-- Parallel critic execution
-- Disagreement detection
-- Evidence-based adjudication
-- Final structured verdict
-- Persistence and audit history
-- FastAPI API
-- Verdict explorer UI
-- Analytics
-- Evaluation dataset
-- Failure handling
-- Docker deployment
+The primary arbitration input consists of:
+
+### 1. Original Prompt
+
+The original question or instruction given to the model.
+
+### 2. Candidate LLM Output
+
+The answer generated by the model that needs to be audited.
+
+Conceptually:
+
+```json
+{
+  "prompt": "Original user question",
+  "candidate_output": "LLM-generated answer"
+}
+```
+
+---
+
+## System Outputs
+
+The system ultimately produces:
+
+* Three structured critic reports.
+* Detected disagreements.
+* A final overall quality score.
+* Final confidence.
+* Confirmed issues.
+* Dismissed flags with reasoning.
+* A final summary.
+* Audit/history information.
+
+The final verdict is intended to preserve the reasoning and evidence chain rather than returning only a single score.
+
+---
+
+## Critics
+
+## 1. Factual Accuracy Critic
+
+The Factual Accuracy Critic evaluates whether claims made in the candidate answer are verifiable and internally consistent.
+
+It focuses on:
+
+* Factual claims.
+* Unsupported claims.
+* Contradictions.
+* Evidence associated with claims.
+* Severity of factual problems.
+* Confidence in the finding.
+
+---
+
+## 2. Logical Consistency Critic
+
+The Logical Consistency Critic evaluates whether the reasoning in the candidate answer follows coherently.
+
+It focuses on:
+
+* Logical contradictions.
+* Unsupported conclusions.
+* Reasoning gaps.
+* Whether conclusions follow from the presented information.
+* Severity of logical problems.
+* Confidence in the finding.
+
+---
+
+## 3. Completeness Critic
+
+The Completeness Critic evaluates whether the candidate answer adequately addresses the original request.
+
+It focuses on:
+
+* Missing requested information.
+* Unanswered parts of the prompt.
+* Important omissions.
+* Coverage of the original requirements.
+* Severity of completeness problems.
+* Confidence in the finding.
+
+---
+
+## Structured Critic Reports
+
+Each critic produces a structured report rather than unstructured text.
+
+A critic report is expected to contain information such as:
+
+* Critic identity.
+* Overall score.
+* Identified issues.
+* Issue type.
+* Severity.
+* Confidence.
+* Quoted evidence.
+* Reasoning supporting the finding.
+
+The structured representation is designed to make critic outputs machine-readable and comparable.
+
+---
+
+## Disagreement Detection
+
+The system does not assume that all critics will agree.
+
+The disagreement layer compares critic findings and identifies meaningful conflicts.
+
+Examples include:
+
+```text
+Factual Critic:
+Issue present
+
+Logical Critic:
+No issue
+
+Completeness Critic:
+Issue present
+```
+
+or:
+
+```text
+Critic A:
+Severity = High
+
+Critic B:
+Severity = Low
+```
+
+The disagreement detector identifies these conflicts so that the adjudicator can explicitly review them.
+
+---
+
+## Evidence-Based Adjudication
+
+The adjudicator receives:
+
+* Original prompt.
+* Candidate answer.
+* Critic reports.
+* Detected disagreements.
+* Supporting evidence.
+
+The adjudicator evaluates the conflicting findings and produces a final structured result.
+
+The final result includes:
+
+* Overall quality score.
+* Confidence.
+* Confirmed issues.
+* Dismissed flags with reasoning.
+* Final summary.
+
+The adjudicator is therefore not simply calculating an average of critic scores. Its purpose is to resolve conflicts using the available evidence.
+
+---
+
+## LLM Provider Abstraction
+
+The project uses a common LLM client abstraction so that critic logic is not tightly coupled to a single provider SDK.
+
+Conceptually:
+
+```text
+                Critic
+                  │
+                  ▼
+          Common LLM Client
+                  │
+       ┌──────────┼──────────┐
+       ▼          ▼          ▼
+    OpenAI     Anthropic    Ollama
+```
+
+A mock/local implementation can also be used during development and testing.
+
+This separation allows provider-specific implementation details to remain outside the critic logic.
+
+---
+
+## Architecture Layers
+
+The system is organized into the following logical layers:
+
+1. **Input Layer**
+
+   * Receives the original prompt and candidate answer.
+
+2. **Critic Layer**
+
+   * Runs the three specialist critics.
+
+3. **Orchestration Layer**
+
+   * Coordinates the workflow using LangGraph.
+
+4. **Disagreement Layer**
+
+   * Compares findings and severity across critics.
+
+5. **Adjudication Layer**
+
+   * Resolves conflicting findings.
+
+6. **Persistence Layer**
+
+   * Stores arbitration records and audit history.
+
+7. **API Layer**
+
+   * Provides arbitration and retrieval endpoints.
+
+8. **UI Layer**
+
+   * Provides verdict exploration and batch-result views.
+
+9. **Analytics Layer**
+
+   * Tracks critic behavior, agreement, disagreement, failure patterns, and related metrics.
+
+10. **Deployment Layer**
+
+    * Provides reproducible containerized deployment.
 
 ---
 
 ## Technology Stack
 
-- Python 3.11+
-- LangGraph
-- OpenAI / Anthropic / Ollama
-- Pydantic
-- Instructor
-- SQLite
-- JSON
-- FastAPI
-- Streamlit or React
-- Docker
-- Docker Compose
+The planned technology stack includes:
+
+| Area               | Technology                  |
+| ------------------ | --------------------------- |
+| Language           | Python 3.11+                |
+| Orchestration      | LangGraph                   |
+| LLM Providers      | OpenAI / Anthropic / Ollama |
+| Structured Outputs | Pydantic + Instructor       |
+| Persistence        | SQLite / JSON               |
+| API                | FastAPI                     |
+| UI                 | React or Streamlit          |
+| Deployment         | Docker / Docker Compose     |
 
 ---
 
 ## Project Structure
 
+The project is being developed incrementally. The structure will grow as each system layer is implemented.
+
+The planned structure includes:
+
 ```text
-llm-output-arbitration/
+LLM Output Arbitration System/
 │
 ├── docs/
 │
 ├── src/
+│   ├── config.py
+│   ├── errors.py
+│   ├── llm_client.py
+│   ├── logging_config.py
+│   ├── main.py
+│   │
+│   ├── critics/
+│   │   ├── factual.py
+│   │   ├── logical.py
+│   │   └── completeness.py
+│   │
+│   ├── schemas/
+│   │   ├── issue.py
+│   │   ├── critic_report.py
+│   │   ├── disagreement.py
+│   │   └── final_verdict.py
+│   │
+│   ├── prompts/
+│   │   ├── factual.py
+│   │   ├── logical.py
+│   │   └── completeness.py
+│   │
+│   ├── graph/
+│   │   ├── state.py
+│   │   └── workflow.py
+│   │
+│   └── utils/
+│       └── request_id.py
 │
 ├── tests/
-│   └── demo_cases.json
 │
+├── data/
+│
+├── .env.example
 ├── .gitignore
+├── requirements.txt
 ├── ARCHITECTURE.md
-├── README.md
-└── SCOPE.md
+├── SCOPE.md
+└── README.md
+```
+
+Individual components will be added as their corresponding development milestone is completed.
+
+---
+
+## Configuration
+
+Configuration is kept outside application code.
+
+The project uses environment variables for values such as:
+
+* LLM provider credentials.
+* Model names.
+* Request timeouts.
+* Retry settings.
+* Evaluation thresholds.
+* Logging configuration.
+
+Secrets must not be committed to the repository.
+
+A `.env.example` file documents the required configuration variables without containing real credentials.
+
+---
+
+## Development Principles
+
+The project follows these engineering principles:
+
+## Separation of Concerns
+
+Critic logic, orchestration, provider integrations, schemas, persistence, API and UI responsibilities are separated.
+
+### Structured Outputs
+
+LLM outputs are represented using structured schemas instead of relying on free-form text parsing wherever possible.
+
+### Provider Independence
+
+Critics communicate through a common LLM client abstraction rather than being directly coupled to one provider.
+
+### Evidence Preservation
+
+Identified issues should retain supporting evidence so that final decisions can be inspected.
+
+### Explicit Disagreement Handling
+
+Conflicting critic findings are treated as first-class information rather than silently averaged away.
+
+### Failure Handling
+
+Provider failures, timeouts, malformed outputs and other expected failures should be handled explicitly.
+
+### Reproducibility
+
+Evaluation and deployment should be repeatable using versioned datasets, documented configuration and containerized deployment.
+
+### Measured Results
+
+Performance and evaluation claims will be based on actual measured results rather than assumed or invented numbers.
+
+---
+
+## API
+
+The planned API includes:
+
+## Single Arbitration
+
+```http
+POST /v1/arbitrate
+```
+
+Submits one candidate output for arbitration.
+
+### Batch Arbitration
+
+```http
+POST /v1/arbitrate/batch
+```
+
+Submits multiple candidate outputs for arbitration.
+
+### Retrieve Arbitration
+
+```http
+GET /v1/arbitrations/{id}
+```
+
+Retrieves a stored arbitration result.
+
+Additional endpoints such as analytics or health checks may be added as the implementation evolves.
+
+---
+
+## Evaluation
+
+The project will use a versioned evaluation dataset rather than relying only on demonstration examples.
+
+The evaluation dataset is planned to include:
+
+* Factual errors.
+* Logical contradictions.
+* Incomplete answers.
+* Correct answers.
+* Mixed-quality answers.
+* Ambiguous cases.
+
+Evaluation will be repeatable and will keep reference labels separate from model-generated outputs.
+
+Where supported by the dataset, evaluation will measure relevant metrics such as:
+
+* Issue-detection precision.
+* Issue-detection recall.
+* Clean-answer false-positive rate.
+* Adjudication agreement.
+* Average confidence.
+
+Actual results will be reported only after running the evaluation.
+
+---
+
+## Portfolio Test Cases
+
+The project includes four core demonstration scenarios:
+
+1. **Factual Error**
+
+   * The candidate answer contains a factual problem.
+
+2. **Logical Flaw**
+
+   * The candidate answer contains an invalid or inconsistent reasoning chain.
+
+3. **Incomplete Answer**
+
+   * The candidate answer fails to address part of the original request.
+
+4. **Good Answer**
+
+   * The candidate answer is genuinely acceptable across the evaluated dimensions.
+
+These cases are intended to demonstrate the complete evidence chain:
+
+```text
+Candidate Answer
+      ↓
+Three Critics
+      ↓
+Critic Reports
+      ↓
+Disagreement Detection
+      ↓
+Adjudication
+      ↓
+Final Verdict
+```
+
+---
+
+## Audit Trail
+
+The system is designed to preserve an audit trail containing information such as:
+
+* Arbitration ID.
+* Original prompt.
+* Candidate output.
+* Critic reports.
+* Detected disagreements.
+* Final score.
+* Final confidence.
+* Confirmed issues.
+* Dismissed flags.
+* Adjudicator reasoning.
+* Final summary.
+
+This allows previous arbitration results to be inspected without requiring another LLM call.
+
+---
+
+## Reliability and Failure Handling
+
+The system is designed to handle expected failures including:
+
+* LLM provider failures.
+* Request timeouts.
+* Retryable provider errors.
+* Malformed structured outputs.
+* Critic failures.
+* API validation errors.
+* Database errors.
+
+Failures should be logged with request identifiers while avoiding exposure of sensitive credentials.
+
+---
+
+## Security
+
+Security considerations include:
+
+* Keeping API keys outside source code.
+* Using environment variables for secrets.
+* Never logging API keys.
+* Validating API inputs.
+* Applying safe input-size limits.
+* Reviewing dependencies.
+* Handling external provider failures safely.
+
+---
+
+## Limitations
+
+LLM-based evaluation is itself imperfect.
+
+Potential limitations include:
+
+* Critics can make incorrect judgments.
+* Different models can share blind spots.
+* Confidence is not a guarantee of correctness.
+* Some factual claims require external verification.
+* Ambiguous prompts can make evaluation subjective.
+* Adjudication can also make mistakes.
+* Evaluation results depend on the quality and coverage of the evaluation dataset.
+
+These limitations will be evaluated and documented as the project develops.
+
+---
+
+## Development Roadmap
+
+The project is being built incrementally through the following major phases:
+
+```text
+Foundation
+    ↓
+Structured Schemas
+    ↓
+Three Critics
+    ↓
+Parallel LangGraph Orchestration
+    ↓
+Disagreement Detection
+    ↓
+Adjudication
+    ↓
+Persistence
+    ↓
+API
+    ↓
+UI
+    ↓
+Analytics
+    ↓
+Evaluation Dataset
+    ↓
+Evaluation & Experiments
+    ↓
+Docker Deployment
+    ↓
+Security & Code Quality
+    ↓
+Portfolio Demo
+    ↓
+GitHub & Documentation
+    ↓
+Final Audit
+```
+
+---
+
+## Current Development Status
+
+The project is being implemented incrementally according to the engineering roadmap.
+
+The current foundation includes the development environment, configuration approach, LLM provider abstraction, request identification, logging, and basic error handling.
+
+Higher-level components such as structured critic schemas, specialist critics, orchestration, disagreement detection, adjudication, persistence, API, UI, analytics and evaluation are implemented in subsequent development stages.
+
+---
+
+## Final Goal
+
+The final system is intended to provide a complete, auditable pipeline for evaluating LLM-generated answers:
+
+```text
+Original Prompt
+      +
+Candidate LLM Output
+      │
+      ▼
+Input Parsing
+      │
+      ▼
+Parallel Specialist Critics
+      │
+      ├── Factual Accuracy
+      ├── Logical Consistency
+      └── Completeness
+      │
+      ▼
+Critique Collection
+      │
+      ▼
+Disagreement Detection
+      │
+      ▼
+Evidence-Based Adjudication
+      │
+      ▼
+Final Structured Verdict
+      │
+      ├── Overall Score
+      ├── Confidence
+      ├── Confirmed Issues
+      ├── Dismissed Flags
+      └── Summary
+      │
+      ▼
+Persistence / API / Dashboard
+```
+
+The final portfolio package will include the implementation, tests, evaluation dataset, Docker setup, API documentation, UI, evaluation report, demonstration material, architecture documentation and README.
