@@ -5,3 +5,5 @@ instructor
 openai
 anthropic
 python-dotenv
+pydantic>=2,<3
+pytest>=8,<9
