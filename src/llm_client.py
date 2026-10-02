@@ -1,6 +1,15 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from src.errors import LLMProviderError
+
+
+@dataclass(frozen=True)
+class LLMResponse:
+    """Normalized response returned by an LLM provider."""
+
+    content: str
+    model: str
 
 
 class LLMClient(ABC):
@@ -9,28 +18,40 @@ class LLMClient(ABC):
     @abstractmethod
     def generate(
         self,
+        *,
         prompt: str,
         system_prompt: str | None = None,
-    ) -> str:
-        """Generate a text response from an LLM."""
+    ) -> LLMResponse:
+        """Generate a normalized response from an LLM."""
         raise NotImplementedError
 
 
 class MockLLMClient(LLMClient):
     """
-    Simple local client used for development and testing.
+    Deterministic local client used for development and testing.
 
     It does not call any external API.
     """
 
+    def __init__(
+        self,
+        response: str = "Mock LLM response.",
+        model: str = "mock-model",
+    ) -> None:
+        self._response = response
+        self._model = model
+
     def generate(
         self,
+        *,
         prompt: str,
         system_prompt: str | None = None,
-    ) -> str:
-        return (
-            "Mock LLM response. "
-            "The real provider integration will be added later."
+    ) -> LLMResponse:
+        """Return a deterministic local response."""
+
+        return LLMResponse(
+            content=self._response,
+            model=self._model,
         )
 
 
@@ -49,16 +70,24 @@ class OpenAIClient(LLMClient):
 
     def generate(
         self,
+        *,
         prompt: str,
         system_prompt: str | None = None,
-    ) -> str:
+    ) -> LLMResponse:
+        """Generate a response using OpenAI.
+
+        The actual provider API integration will be implemented
+        in a later stage.
+        """
+
         if not self.api_key:
             raise LLMProviderError(
                 "OpenAI API key is not configured."
             )
 
         raise NotImplementedError(
-            "OpenAI API call will be implemented in the next stage."
+            "OpenAI API integration will be implemented "
+            "in the next stage."
         )
 
 
@@ -77,15 +106,23 @@ class AnthropicClient(LLMClient):
 
     def generate(
         self,
+        *,
         prompt: str,
         system_prompt: str | None = None,
-    ) -> str:
+    ) -> LLMResponse:
+        """Generate a response using Anthropic.
+
+        The actual provider API integration will be implemented
+        in a later stage.
+        """
+
         if not self.api_key:
             raise LLMProviderError(
                 "Anthropic API key is not configured."
             )
 
         raise NotImplementedError(
-            "Anthropic API call will be implemented in the next stage."
+            "Anthropic API integration will be implemented "
+            "in the next stage."
         )
     
