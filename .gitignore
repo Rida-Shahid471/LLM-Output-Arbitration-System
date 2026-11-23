@@ -1,20 +1,45 @@
 __pycache__/
 *.py[cod]
 .venv/
+.qa-venv/
 venv/
 env/
 
 .env
 .env.*
 !.env.example
+.envrc
+.streamlit/secrets.toml
+secrets/
+*.pem
+*.key
+credentials.json
 
 *.db
 *.sqlite
 *.sqlite3
+*.db-*
+*.sqlite-*
+*.sqlite3-*
+/data/
 
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+node_modules/
+tmp/
+temp/
+*.log
+
+# Preserve the original high-bitrate local demo; publish the verified compressed copy instead.
+/docs/demo/LLM_arbitration_system_demo.mp4
+
+# Keep internal roadmap progress tracking out of the public project snapshot.
+/docs/internal/roadmap-traceability.md
 
 .vscode/
 

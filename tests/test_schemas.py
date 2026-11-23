@@ -36,6 +36,7 @@ def test_issue_rejects_invalid_confidence() -> None:
 def test_critic_report_accepts_empty_issue_list() -> None:
     report = CriticReport(
         critic_type=CriticType.COMPLETENESS,
+        score=5,
         summary="The answer addresses the requested information.",
         overall_confidence=0.90,
     )
@@ -47,6 +48,7 @@ def test_critic_report_rejects_unknown_fields() -> None:
     with pytest.raises(ValidationError):
         CriticReport(
             critic_type=CriticType.FACTUAL_ACCURACY,
+            score=3,
             summary="Test report.",
             overall_confidence=0.90,
             unexpected_field="invalid",

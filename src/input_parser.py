@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
+from src.config import settings
+
 
 class ArbitrationInput(BaseModel):
     """Validated input entering the arbitration pipeline."""
@@ -26,7 +28,12 @@ def parse_input(
 ) -> ArbitrationInput:
     """Validate and construct an arbitration input object."""
 
-    return ArbitrationInput(
+    parsed = ArbitrationInput(
         original_prompt=original_prompt,
         candidate_answer=candidate_answer,
     )
+    if len(parsed.original_prompt) > settings.max_prompt_chars:
+        raise ValueError(f"Original prompt exceeds {settings.max_prompt_chars} characters.")
+    if len(parsed.candidate_answer) > settings.max_answer_chars:
+        raise ValueError(f"Candidate answer exceeds {settings.max_answer_chars} characters.")
+    return parsed

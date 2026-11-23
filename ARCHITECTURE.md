@@ -1119,3 +1119,9 @@ Not every component is implemented at the same development stage.
 The architecture will be refined as implementation, testing, evaluation and deployment reveal concrete requirements.
 
 The final architecture must remain consistent with the actual codebase and deployed system.
+
+## 34. Current Implementation Status (2026-11)
+
+The repository now includes the input/critic contracts, OpenAI/Anthropic/Ollama-compatible provider clients, three critic prompt dimensions, parallel LangGraph execution, deterministic disagreement detection, structured adjudication with a unanimous-good shortcut, SQLite history, FastAPI endpoints, Streamlit verdict explorer, analytics, a versioned starter evaluation dataset, and Docker Compose configuration. Offline tests use deterministic mock clients and do not validate provider quality or live credentials.
+
+Known external/manual validation remains: configure a real provider or Ollama model, run live evaluations against a human-reviewed expanded dataset, run Docker Compose on a host with Docker, and prepare portfolio screenshots/video. These results must be recorded only after those checks are actually performed.

@@ -1,0 +1,3978 @@
+{
+  "generated_at": "2026-11-06T03:54:10.106192+00:00",
+  "dataset_version": "1.2.0",
+  "critic_prompt_version": "critic-prompts-v3",
+  "adjudicator_prompt_version": "adjudicator-prompt-v3",
+  "model_digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+  "provider_budgets": {
+    "openai": {
+      "max_input_chars": 100000,
+      "max_output_tokens": 1024
+    },
+    "anthropic": {
+      "max_input_chars": 100000,
+      "max_output_tokens": 1024
+    },
+    "ollama": {
+      "max_input_chars": 100000,
+      "max_output_tokens": 1024
+    }
+  },
+  "provider": "ollama",
+  "adjudicator_model": "qwen2.5:1.5b",
+  "critic_models": {
+    "factual_accuracy": "qwen2.5:1.5b",
+    "logical_consistency": "qwen2.5:1.5b",
+    "completeness": "qwen2.5:1.5b"
+  },
+  "observed_critic_models": {
+    "factual_accuracy": [
+      "qwen2.5:1.5b"
+    ],
+    "logical_consistency": [
+      "qwen2.5:1.5b"
+    ],
+    "completeness": [
+      "qwen2.5:1.5b"
+    ]
+  },
+  "observed_critic_providers": {
+    "factual_accuracy": [
+      "ollama"
+    ],
+    "logical_consistency": [
+      "ollama"
+    ],
+    "completeness": [
+      "ollama"
+    ]
+  },
+  "observed_adjudicator_models": [
+    "qwen2.5:1.5b"
+  ],
+  "observed_adjudicator_providers": [
+    "ollama"
+  ],
+  "dataset_cases": 21,
+  "evaluated_cases": 20,
+  "ambiguous_cases_skipped": 1,
+  "human_review_cases_skipped": 0,
+  "cases_excluded_due_to_critic_failures": 0,
+  "issue_detection_precision": 0.6842,
+  "issue_detection_precision_status": "defined",
+  "issue_detection_recall": 1.0,
+  "issue_detection_recall_status": "defined",
+  "issue_detection_f1": 0.8125,
+  "issue_detection_f1_status": "defined",
+  "clean_answer_false_positive_rate": 0.8571,
+  "clean_answer_false_positive_rate_status": "defined",
+  "adjudication_agreement": 0.2143,
+  "adjudication_agreement_status": "defined",
+  "verdict_evaluated_cases": 14,
+  "verdict_matches": 3,
+  "average_confidence": 0.7321,
+  "metric_denominators": {
+    "issue_detection_precision": {
+      "count": 19,
+      "predicted_positive_cases": 19
+    },
+    "issue_detection_recall": {
+      "count": 13,
+      "actual_positive_cases": 13
+    },
+    "clean_answer_false_positive_rate": {
+      "count": 7,
+      "clean_cases": 7
+    },
+    "adjudication_agreement": {
+      "count": 14,
+      "verdict_matches": 3
+    }
+  },
+  "cases_with_critic_failures": 0,
+  "total_critic_failures": 0,
+  "critic_failures_by_type": {},
+  "cases_with_adjudication_fallback": 6,
+  "eligible_cases": 20,
+  "evaluation_coverage": 1.0,
+  "evaluation_coverage_status": "defined",
+  "failed_case_count": 6,
+  "error_rate": 0.3,
+  "error_rate_status": "defined",
+  "total_execution_seconds": 226622.013,
+  "average_case_execution_seconds": 11331.1,
+  "provider_request_totals": {
+    "requests": 28,
+    "successful_requests": 26,
+    "failed_requests": 2,
+    "status": "complete",
+    "prompt_tokens": 20752,
+    "completion_tokens": 9502,
+    "total_tokens": 30254
+  },
+  "issue_category_counts": {
+    "factual_error": 3,
+    "incomplete_answer": 19,
+    "invalid_inference": 2,
+    "logical_contradiction": 4,
+    "unsupported_claim": 22
+  },
+  "confusion": {
+    "true_positive": 13,
+    "false_positive": 6,
+    "false_negative": 0,
+    "true_negative": 1
+  },
+  "case_results": [
+    {
+      "id": "fact_false_001",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "reject",
+      "confidence": 0.8,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 102.145,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer is incorrect and unsupported.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that the capital of Australia is Sydney, which is incorrect.",
+              "evidence": "The capital of Australia is Sydney.",
+              "severity": "high",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer is logically inconsistent as it incorrectly states that Sydney is the capital of Australia.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that Sydney is the capital of Australia.",
+              "evidence": "The capital of Australia is Sydney.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 1,
+          "summary": "The candidate answer is incomplete as it does not provide the capital of Australia.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the capital of Australia.",
+              "evidence": "The capital of Australia is Sydney.",
+              "severity": "high",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.9,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 2,
+        "confidence": 0.8,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that the capital of Australia is Sydney, which is incorrect.",
+              "evidence": "The capital of Australia is Sydney.",
+              "severity": "high",
+              "confidence": 0.5
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that Sydney is the capital of Australia.",
+              "evidence": "The capital of Australia is Sydney.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the capital of Australia.",
+              "evidence": "The capital of Australia is Sydney.",
+              "severity": "high",
+              "confidence": 0.9
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "The candidate answer is dismissed due to factual accuracy and logical consistency issues. The capital of Australia is Canberra, not Sydney. The evidence provided is insufficient to support the claim that Sydney is the capital, and the logical inconsistency is that Sydney is not the capital. The completeness issue is also dismissed as the candidate answer does not provide the capital of Australia. The overall score is 2, indicating a moderate level of disagreement. The final verdict is 'reject' because the evidence provided is insufficient to support the claim.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer incorrectly states that the capital of Australia is Sydney, which is incorrect. The evidence provided is insufficient to support the claim that Sydney is the capital. The logical inconsistency is that Sydney is not the capital. The completeness issue is also dismissed as the candidate answer does not provide the capital of Australia. The overall score is 2, indicating a moderate level of disagreement. The final verdict is 'reject' because the evidence provided is insufficient to support the claim.",
+        "recommended_revision": "The candidate answer should be revised to provide the correct capital of Australia, which is Canberra.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 2,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1560,
+        "completion_tokens": 682,
+        "total_tokens": 2242
+      }
+    },
+    {
+      "id": "logic_001",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.5,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 116.764,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct number of balls.",
+              "evidence": "There are 5 balls.",
+              "severity": "high",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical inconsistency.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that there are 6 balls, which is not based on the given information.",
+              "evidence": "There are 5 balls.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it does not provide the total number of balls.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the total number of balls.",
+              "evidence": "There are 5 balls.",
+              "severity": "low",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.5
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 2,
+        "confidence": 0.5,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that there are 6 balls, which is not based on the given information.",
+              "evidence": "There are 5 balls.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          }
+        ],
+        "dismissed_flags": [
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct number of balls.",
+              "evidence": "There are 5 balls.",
+              "severity": "high",
+              "confidence": 0.5
+            },
+            "critic_type": "factual_accuracy",
+            "reason": "The candidate answer does not provide the correct number of balls."
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the total number of balls.",
+              "evidence": "There are 5 balls.",
+              "severity": "low",
+              "confidence": 0.5
+            },
+            "critic_type": "completeness",
+            "reason": "The candidate answer does not provide the total number of balls."
+          }
+        ],
+        "summary": "The candidate answer is dismissed due to factual and logical inconsistencies. The original prompt asks for the total number of balls in a box with 3 red and 2 blue balls, which should result in 5 balls. The candidate answer incorrectly states there are 6 balls, which is not based on the given information. The logical inconsistency is that the candidate answer does not provide the total number of balls, which is a critical piece of information needed to answer the question. The factual accuracy issue is confirmed, as the candidate answer does not provide the correct number of balls. The logical consistency issue is confirmed, as the candidate answer states there are 6 balls, which is not based on the given information. The completeness issue is confirmed, as the candidate answer does not provide the total number of balls. The overall score is 2, indicating a moderate level of disagreement with the candidate answer. The final verdict is revise, as the candidate answer is incorrect and does not provide the correct number of balls. The confidence level is 0.5, indicating a moderate level of disagreement with the candidate answer.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.5
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer is dismissed due to factual and logical inconsistencies. The original prompt asks for the total number of balls in a box with 3 red and 2 blue balls, which should result in 5 balls. The candidate answer incorrectly states there are 6 balls, which is not based on the given information. The logical inconsistency is that the candidate answer does not provide the total number of balls, which is a critical piece of information needed to answer the question. The factual accuracy issue is confirmed, as the candidate answer does not provide the correct number of balls. The logical consistency issue is confirmed, as the candidate answer states there are 6 balls, which is not based on the given information. The completeness issue is confirmed, as the candidate answer does not provide the total number of balls. The overall score is 2, indicating a moderate level of disagreement with the candidate answer. The final verdict is revise, as the candidate answer is incorrect and does not provide the correct number of balls. The confidence level is 0.5, indicating a moderate level of disagreement with the candidate answer.",
+        "recommended_revision": "The candidate answer should be revised to provide the correct number of balls, which is 5, based on the original prompt.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 810,
+        "completion_tokens": 652,
+        "total_tokens": 1462
+      }
+    },
+    {
+      "id": "incomplete_001",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.2,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 148.356,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim about the capital of Japan.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct capital of Japan.",
+              "evidence": "The capital of Japan is Tokyo.",
+              "severity": "low",
+              "confidence": 0.2
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical inconsistency as Tokyo is not the capital of Japan.",
+          "issues": [
+            {
+              "category": "logical_contradiction",
+              "description": "The capital of Japan is Tokyo, but the candidate answer states that the capital is not Tokyo.",
+              "evidence": "The capital of Japan is Tokyo.",
+              "severity": "critical",
+              "confidence": 0.0
+            }
+          ],
+          "overall_confidence": 0.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it does not provide the currency of Japan.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer is missing the currency of Japan.",
+              "evidence": "The capital of Japan is Tokyo.",
+              "severity": "medium",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.2
+        },
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "critical",
+          "confidence": 0.0
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "medium",
+          "confidence": 0.5
+        },
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "critical",
+          "confidence": 0.0
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 2,
+        "confidence": 0.2,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct capital of Japan.",
+              "evidence": "The capital of Japan is Tokyo.",
+              "severity": "low",
+              "confidence": 0.2
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "logical_contradiction",
+              "description": "The capital of Japan is Tokyo, but the candidate answer states that the capital is not Tokyo.",
+              "evidence": "The capital of Japan is Tokyo.",
+              "severity": "critical",
+              "confidence": 0.0
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer is missing the currency of Japan.",
+              "evidence": "The capital of Japan is Tokyo.",
+              "severity": "medium",
+              "confidence": 0.5
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "The candidate answer is incomplete and provides incorrect information about the capital of Japan. The capital is Tokyo, and the currency is the Japanese yen (JPY). The original prompt asks for the capital and currency of Japan, and the candidate answer only provides the capital, which is incorrect. The candidate answer also fails to provide the correct currency, which is a logical contradiction. The issues identified are confirmed, and the overall score is low due to the critical nature of the logical contradiction. The final verdict is 'reject' because the candidate answer is not only incorrect but also fails to provide the required information.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.2
+          },
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "critical",
+            "confidence": 0.0
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "medium",
+            "confidence": 0.5
+          },
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "critical",
+            "confidence": 0.0
+          }
+        ],
+        "rationale": "The candidate answer is incorrect and incomplete, providing only the capital of Japan (Tokyo) without the correct currency (Japanese yen). This is a logical contradiction and an incomplete answer, which are confirmed issues. The candidate answer fails to provide the correct currency, which is a critical issue. The overall score is low due to the logical contradiction, and the final verdict is 'reject' because the candidate answer is not only incorrect but also fails to provide the required information.",
+        "recommended_revision": "The candidate answer should provide the correct capital (Tokyo) and the correct currency (Japanese yen) to meet the requirements of the original prompt.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "logical_contradiction"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 2,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1586,
+        "completion_tokens": 792,
+        "total_tokens": 2378
+      }
+    },
+    {
+      "id": "clean_001",
+      "evaluation_status": "critic_scored_adjudication_fallback",
+      "predicted_issue": true,
+      "expected_issue": false,
+      "verdict": "reject",
+      "expected_verdict": "accept",
+      "confidence": 0.35,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": true,
+      "elapsed_seconds": 103.156,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that 2 + 2 = 4, which is an unsupported assertion.",
+              "evidence": "2 + 2 = 4.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 5,
+          "summary": "The candidate answer is logically consistent with the original prompt.",
+          "issues": [],
+          "overall_confidence": 1.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 5,
+          "summary": "The candidate answer is complete and fully addresses the original request.",
+          "issues": [],
+          "overall_confidence": 1.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "Critic scores differ by 4 points (1 vs 5).",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 4 points (1 vs 5).",
+          "severity": "high",
+          "confidence": 0.5
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.35,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that 2 + 2 = 4, which is an unsupported assertion.",
+              "evidence": "2 + 2 = 4.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "factual_accuracy"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "A conservative fallback verdict was produced because the adjudicator response could not be validated.",
+        "unresolved_disagreements": [
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "Critic scores differ by 4 points (1 vs 5).",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 4 points (1 vs 5).",
+            "severity": "high",
+            "confidence": 0.5
+          }
+        ],
+        "rationale": "Fallback used: Local adjudicator verdict conflicts with its issue resolutions.. Errors: none",
+        "recommended_revision": "Review the candidate answer and critic reports manually.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 2,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1280,
+        "completion_tokens": 709,
+        "total_tokens": 1989
+      }
+    },
+    {
+      "id": "mixed_001",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.9,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 97.733,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 2,
+          "summary": "The candidate answer contains an incorrect factual claim about Jupiter.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that Jupiter is the largest planet, which is incorrect.",
+              "evidence": "Jupiter is the largest planet.",
+              "severity": "high",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains logical inconsistencies.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that Jupiter is the largest planet, but it is actually Saturn.",
+              "evidence": "Jupiter is the largest planet.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            {
+              "category": "invalid_inference",
+              "description": "The candidate answer incorrectly infers that Jupiter has a solid surface, which is not true.",
+              "evidence": "It is a rocky planet with a solid surface.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it does not provide the name of the largest planet or any fact about it.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the name of the largest planet or any fact about it.",
+              "evidence": "Jupiter is the largest planet. It is a rocky planet with a solid surface.",
+              "severity": "low",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "invalid_inference",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "invalid_inference",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.9,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that Jupiter is the largest planet, which is incorrect.",
+              "evidence": "Jupiter is the largest planet.",
+              "severity": "high",
+              "confidence": 0.9
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that Jupiter is the largest planet, but it is actually Saturn.",
+              "evidence": "Jupiter is the largest planet.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "invalid_inference",
+              "description": "The candidate answer incorrectly infers that Jupiter has a solid surface, which is not true.",
+              "evidence": "It is a rocky planet with a solid surface.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the name of the largest planet or any fact about it.",
+              "evidence": "Jupiter is the largest planet. It is a rocky planet with a solid surface.",
+              "severity": "low",
+              "confidence": 0.9
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "The candidate answer is dismissed due to multiple issues: Jupiter is not the largest planet, it is actually Saturn, and the answer is incomplete. The candidate's claim about Jupiter being a rocky planet with a solid surface is also unsupported.",
+        "unresolved_disagreements": [
+          {
+            "topic": "invalid_inference",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "invalid_inference",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer is dismissed because it contains unsupported claims and is incomplete. The issues of Jupiter being the largest planet, incorrect information about its surface, and the claim of it being a rocky planet with a solid surface are all confirmed as false by the provided evidence and critical findings.",
+        "recommended_revision": "The answer should be revised to provide the correct information about the largest planet (Saturn) and include a fact about it (e.g., Saturn has a ring system). The surface of Jupiter is not rocky, and it is not a solid planet.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "invalid_inference",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1045,
+        "completion_tokens": 400,
+        "total_tokens": 1445
+      }
+    },
+    {
+      "id": "ambiguous_001",
+      "evaluation_status": "skipped_ambiguous"
+    },
+    {
+      "id": "fact_false_002",
+      "evaluation_status": "critic_scored_adjudication_fallback",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "reject",
+      "confidence": 0.35,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": true,
+      "elapsed_seconds": 1382.173,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer is incorrect and unsupported.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that Lyon is the capital of France, which is incorrect and unsupported.",
+              "evidence": "The capital of France is Lyon.",
+              "severity": "high",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical inconsistency as Lyon is not the capital of France.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that Lyon is the capital of France.",
+              "evidence": "The capital of France is Lyon.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it does not provide the capital of France, which is Paris.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the capital of France, which is Paris.",
+              "evidence": "The capital of France is Lyon.",
+              "severity": "medium",
+              "confidence": 0.6
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "medium",
+          "confidence": 0.6
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "medium",
+          "confidence": 0.6
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.35,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that Lyon is the capital of France, which is incorrect and unsupported.",
+              "evidence": "The capital of France is Lyon.",
+              "severity": "high",
+              "confidence": 0.5
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that Lyon is the capital of France.",
+              "evidence": "The capital of France is Lyon.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the capital of France, which is Paris.",
+              "evidence": "The capital of France is Lyon.",
+              "severity": "medium",
+              "confidence": 0.6
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "A conservative fallback verdict was produced because the adjudicator response could not be validated.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "medium",
+            "confidence": 0.6
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "medium",
+            "confidence": 0.6
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "Fallback used: Local adjudicator verdict conflicts with its issue resolutions.. Errors: none",
+        "recommended_revision": "Review the candidate answer and critic reports manually.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 1,
+        "failed_requests": 1,
+        "status": "complete",
+        "prompt_tokens": 786,
+        "completion_tokens": 333,
+        "total_tokens": 1119
+      }
+    },
+    {
+      "id": "fact_true_001",
+      "evaluation_status": "critic_scored_adjudication_fallback",
+      "predicted_issue": true,
+      "expected_issue": false,
+      "verdict": "reject",
+      "expected_verdict": "accept",
+      "confidence": 0.35,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": true,
+      "elapsed_seconds": 93.447,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim about the capital and currency of Japan.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that Tokyo is the capital of Japan and the yen is the currency of Japan.",
+              "evidence": "Tokyo is the capital of Japan, and the yen is its currency.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 5,
+          "summary": "The candidate answer is logically consistent and provides the correct capital and currency of Japan.",
+          "issues": [],
+          "overall_confidence": 1.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 1,
+          "summary": "The candidate answer is incomplete as it does not provide the capital and currency of Japan.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the capital and currency of Japan.",
+              "evidence": "Tokyo is the capital of Japan, and the yen is its currency.",
+              "severity": "low",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "Critic scores differ by 4 points (1 vs 5).",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.8
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 4 points (5 vs 1).",
+          "severity": "high",
+          "confidence": 0.5
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.35,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that Tokyo is the capital of Japan and the yen is the currency of Japan.",
+              "evidence": "Tokyo is the capital of Japan, and the yen is its currency.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the capital and currency of Japan.",
+              "evidence": "Tokyo is the capital of Japan, and the yen is its currency.",
+              "severity": "low",
+              "confidence": 0.8
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "A conservative fallback verdict was produced because the adjudicator response could not be validated.",
+        "unresolved_disagreements": [
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "Critic scores differ by 4 points (1 vs 5).",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.8
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 4 points (5 vs 1).",
+            "severity": "high",
+            "confidence": 0.5
+          }
+        ],
+        "rationale": "Fallback used: Local adjudicator verdict conflicts with its issue resolutions.. Errors: none",
+        "recommended_revision": "Review the candidate answer and critic reports manually.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 2,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1774,
+        "completion_tokens": 618,
+        "total_tokens": 2392
+      }
+    },
+    {
+      "id": "logic_002",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.85,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 88.898,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that whales do not breathe air, which contradicts the original prompt that whales are mammals and breathe air.",
+              "evidence": "Whales are mammals, so whales do not breathe air.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a contradiction with the original prompt.",
+          "issues": [
+            {
+              "category": "logical_contradiction",
+              "description": "The candidate answer contradicts the original prompt by stating that whales do not breathe air.",
+              "evidence": "Whales are mammals, so whales do not breathe air.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete and does not address the specific requirement of what follows after the statement 'Whales are mammals'.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide any information about what follows after the statement 'Whales are mammals'.",
+              "evidence": "Whales are mammals, so whales do not breathe air.",
+              "severity": "low",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 2,
+        "confidence": 0.85,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that whales do not breathe air, which contradicts the original prompt that whales are mammals and breathe air.",
+              "evidence": "Whales are mammals, so whales do not breathe air.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "logical_contradiction",
+              "description": "The candidate answer contradicts the original prompt by stating that whales do not breathe air.",
+              "evidence": "Whales are mammals, so whales do not breathe air.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          }
+        ],
+        "dismissed_flags": [
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide any information about what follows after the statement 'Whales are mammals'.",
+              "evidence": "Whales are mammals, so whales do not breathe air.",
+              "severity": "low",
+              "confidence": 0.9
+            },
+            "critic_type": "completeness",
+            "reason": "The candidate answer does not provide any information about what follows after the statement 'Whales are mammals'."
+          }
+        ],
+        "summary": "The candidate answer is dismissed due to a logical contradiction with the original prompt. The prompt states that whales are mammals and breathe air, while the answer incorrectly states that whales do not breathe air. This is a confirmed issue with a high severity and confidence. The answer is also incomplete, as it does not provide information about what follows after the statement about whales being mammals. This is a confirmed issue with a low severity and confidence. The overall score is based on the severity and confidence of the confirmed issues, which is 2 out of 3. The final verdict is revise due to the logical contradiction and the incomplete answer.",
+        "unresolved_disagreements": [
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer contradicts the original prompt by stating that whales do not breathe air, which is incorrect. This is a confirmed issue with a high severity and confidence. The answer is also incomplete, as it does not provide information about what follows after the statement about whales being mammals. This is a confirmed issue with a low severity and confidence. The overall score is based on the severity and confidence of the confirmed issues, which is 2 out of 3. The final verdict is revise due to the logical contradiction and the incomplete answer.",
+        "recommended_revision": "The candidate answer should be revised to accurately reflect that whales are mammals and breathe air, and provide information about what follows after the statement about whales being mammals.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "logical_contradiction",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 985,
+        "completion_tokens": 487,
+        "total_tokens": 1472
+      }
+    },
+    {
+      "id": "logic_003",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.8,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 204.259,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect calculation.",
+          "issues": [
+            {
+              "category": "factual_error",
+              "description": "The candidate answer incorrectly calculates the expression (8 / 2) * 3, resulting in 24 instead of the correct answer of 12.",
+              "evidence": "8 / 2 = 4, and 4 * 3 = 12, so the answer is 24.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains logical inconsistencies.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that 8 / 2 = 4.",
+              "evidence": "8 / 2 = 4",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            {
+              "category": "invalid_inference",
+              "description": "The candidate answer incorrectly infers that 4 * 3 = 12.",
+              "evidence": "4 * 3 = 12",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that the answer is 24.",
+              "evidence": "so the answer is 24",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it does not provide the correct calculation result.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct calculation result.",
+              "evidence": "8 / 2 = 4, and 4 * 3 = 12, so the answer is 24.",
+              "severity": "high",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "invalid_inference",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "invalid_inference",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 2,
+        "confidence": 0.8,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "factual_error",
+              "description": "The candidate answer incorrectly calculates the expression (8 / 2) * 3, resulting in 24 instead of the correct answer of 12.",
+              "evidence": "8 / 2 = 4, and 4 * 3 = 12, so the answer is 24.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that 8 / 2 = 4.",
+              "evidence": "8 / 2 = 4",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "invalid_inference",
+              "description": "The candidate answer incorrectly infers that 4 * 3 = 12.",
+              "evidence": "4 * 3 = 12",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that the answer is 24.",
+              "evidence": "so the answer is 24",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct calculation result.",
+              "evidence": "8 / 2 = 4, and 4 * 3 = 12, so the answer is 24.",
+              "severity": "high",
+              "confidence": 0.9
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "The candidate answer incorrectly calculates the expression (8 / 2) * 3, resulting in 24 instead of the correct answer of 12. This is a factual error, and the logical consistency and unsupported claim issues are also confirmed. The completeness issue is partially supported but not fully resolved. The overall score is 2, indicating a moderate level of disagreement with the candidate answer.",
+        "unresolved_disagreements": [
+          {
+            "topic": "factual_error",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "invalid_inference",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "factual_error",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "invalid_inference",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'invalid_inference' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer incorrectly calculates the expression (8 / 2) * 3, resulting in 24 instead of the correct answer of 12. This is a factual error, and the logical consistency and unsupported claim issues are also confirmed. The completeness issue is partially supported but not fully resolved. The overall score is 2, indicating a moderate level of disagreement with the candidate answer.",
+        "recommended_revision": "The candidate answer incorrectly calculates the expression (8 / 2) * 3, resulting in 24 instead of the correct answer of 12. This is a factual error, and the logical consistency and unsupported claim issues are also confirmed. The completeness issue is partially supported but not fully resolved. The overall score is 2, indicating a moderate level of disagreement with the candidate answer.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "factual_error",
+        "incomplete_answer",
+        "invalid_inference",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1463,
+        "completion_tokens": 555,
+        "total_tokens": 2018
+      }
+    },
+    {
+      "id": "incomplete_002",
+      "evaluation_status": "critic_scored_adjudication_fallback",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.0,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": true,
+      "elapsed_seconds": 90.659,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 2,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that regular exercise can improve cardiovascular fitness and build strength.",
+              "evidence": "Regular exercise can improve cardiovascular fitness and build strength.",
+              "severity": "high",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer does not provide any logical consistency with the original request.",
+          "issues": [],
+          "overall_confidence": 0.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it only lists two benefits of regular exercise, not three.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not list three benefits of regular exercise.",
+              "evidence": "Regular exercise can improve cardiovascular fitness and build strength.",
+              "severity": "low",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.0,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that regular exercise can improve cardiovascular fitness and build strength.",
+              "evidence": "Regular exercise can improve cardiovascular fitness and build strength.",
+              "severity": "high",
+              "confidence": 0.9
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not list three benefits of regular exercise.",
+              "evidence": "Regular exercise can improve cardiovascular fitness and build strength.",
+              "severity": "low",
+              "confidence": 0.9
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "A conservative fallback verdict was produced because the adjudicator response could not be validated.",
+        "unresolved_disagreements": [
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          }
+        ],
+        "rationale": "Fallback used: Local adjudicator verdict conflicts with its issue resolutions.. Errors: none",
+        "recommended_revision": "Review the candidate answer and critic reports manually.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 2,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1436,
+        "completion_tokens": 709,
+        "total_tokens": 2145
+      }
+    },
+    {
+      "id": "complete_001",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": false,
+      "verdict": "reject",
+      "expected_verdict": "accept",
+      "confidence": 0.9,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 69.486,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 2,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that red and blue are primary colors.",
+              "evidence": "Red and blue are two primary colors.",
+              "severity": "high",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical inconsistency.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that red and blue are primary colors.",
+              "evidence": "Red and blue are two primary colors.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 1,
+          "summary": "The candidate answer is incomplete as it only lists two primary colors (red and blue) without providing the other primary color (yellow).",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer is missing the primary color (yellow) in the traditional red-yellow-blue (RYB) model.",
+              "evidence": "Red and blue are two primary colors.",
+              "severity": "high",
+              "confidence": 1.0
+            }
+          ],
+          "overall_confidence": 0.9,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.9,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that red and blue are primary colors.",
+              "evidence": "Red and blue are two primary colors.",
+              "severity": "high",
+              "confidence": 0.9
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that red and blue are primary colors.",
+              "evidence": "Red and blue are two primary colors.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer is missing the primary color (yellow) in the traditional red-yellow-blue (RYB) model.",
+              "evidence": "Red and blue are two primary colors.",
+              "severity": "high",
+              "confidence": 1.0
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "The candidate answer is dismissed due to multiple confirmed issues, including unsupported claims and incomplete information. The final verdict is accept because the original prompt and candidate answer do not match, and there are no critic errors.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer incorrectly states that red and blue are primary colors, which is an unsupported claim. Additionally, the answer is missing the primary color (yellow) in the traditional red-yellow-blue (RYB) model, which is an incomplete answer. These issues are confirmed, leading to a dismissal of the candidate answer.",
+        "recommended_revision": "The candidate answer should be revised to include the primary color (yellow) and correctly identify red, yellow, and blue as primary colors.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 802,
+        "completion_tokens": 327,
+        "total_tokens": 1129
+      }
+    },
+    {
+      "id": "mixed_002",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.8,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 77.062,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim about the size of Jupiter compared to Earth.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct answer to the original prompt.",
+              "evidence": "Jupiter is the largest planet, and it is smaller than Earth.",
+              "severity": "low",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical contradiction.",
+          "issues": [
+            {
+              "category": "logical_contradiction",
+              "description": "The statement 'Jupiter is the largest planet, and it is smaller than Earth' is contradictory.",
+              "evidence": "Jupiter is the largest planet, and it is smaller than Earth.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it does not provide the name of the largest planet and does not state whether it is larger than Earth.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer fails to provide the name of the largest planet and does not state whether it is larger than Earth.",
+              "evidence": "Jupiter is the largest planet, and it is smaller than Earth.",
+              "severity": "medium",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.5
+        },
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "medium",
+          "confidence": 0.8
+        },
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 2,
+        "confidence": 0.8,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "logical_contradiction",
+              "description": "The statement 'Jupiter is the largest planet, and it is smaller than Earth' is contradictory.",
+              "evidence": "Jupiter is the largest planet, and it is smaller than Earth.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer fails to provide the name of the largest planet and does not state whether it is larger than Earth.",
+              "evidence": "Jupiter is the largest planet, and it is smaller than Earth.",
+              "severity": "medium",
+              "confidence": 0.8
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the correct answer to the original prompt.",
+              "evidence": "Jupiter is the largest planet, and it is smaller than Earth.",
+              "severity": "low",
+              "confidence": 0.5
+            },
+            "critic_type": "factual_accuracy",
+            "reason": "The candidate answer does not provide the correct answer to the original prompt."
+          }
+        ],
+        "summary": "The candidate answer is dismissed due to logical consistency and factual accuracy issues. The answer incorrectly states that Jupiter is smaller than Earth, which contradicts the fact that Jupiter is the largest planet. Additionally, the answer fails to provide the name of the largest planet, which is a significant issue. The final verdict is based on the logical inconsistency and factual inaccuracy, leading to a reject decision.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.5
+          },
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "medium",
+            "confidence": 0.8
+          },
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer is dismissed due to logical inconsistency and factual inaccuracy. The statement that Jupiter is smaller than Earth contradicts the fact that Jupiter is the largest planet. Additionally, the answer fails to provide the name of the largest planet, which is a significant issue. The final verdict is based on the logical inconsistency and factual inaccuracy, leading to a dismiss decision.",
+        "recommended_revision": "The candidate answer should be revised to provide the name of the largest planet and correctly state that Jupiter is the largest planet and larger than Earth.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "logical_contradiction"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 842,
+        "completion_tokens": 382,
+        "total_tokens": 1224
+      }
+    },
+    {
+      "id": "clean_002",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": false,
+      "verdict": "reject",
+      "expected_verdict": "accept",
+      "confidence": 0.8,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 64.072,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that two triangles have 6 sides in total.",
+              "evidence": "Each triangle has 3 sides, so two triangles have 6 sides in total.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical inconsistency.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that two triangles have 6 sides in total, which is incorrect.",
+              "evidence": "Each triangle has 3 sides, so two triangles have 6 sides in total.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 1,
+          "summary": "The candidate answer is incomplete as it does not address the total number of sides for two triangles.",
+          "issues": [],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.8,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly states that two triangles have 6 sides in total.",
+              "evidence": "Each triangle has 3 sides, so two triangles have 6 sides in total.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that two triangles have 6 sides in total, which is incorrect.",
+              "evidence": "Each triangle has 3 sides, so two triangles have 6 sides in total.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "The candidate answer incorrectly states that two triangles have 6 sides in total, which is incorrect. The issue is confirmed as unsupported claim, and the severity is high with a confidence of 0.8. The overall score is 1, indicating a high level of confidence in the issue's confirmation. The final verdict is 'reject' because the issue is confirmed and the severity is high, which meets the criteria for a 'reject' verdict.",
+        "unresolved_disagreements": [
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The candidate answer incorrectly states that two triangles have 6 sides in total, which is incorrect. The issue is confirmed as unsupported claim, and the severity is high with a confidence of 0.8. The overall score is 1, indicating a high level of confidence in the issue's confirmation. The final verdict is 'reject' because the issue is confirmed and the severity is high, which meets the criteria for a 'reject' verdict.",
+        "recommended_revision": "The candidate answer should be corrected to accurately reflect the fact that two triangles have 6 sides in total.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 596,
+        "completion_tokens": 350,
+        "total_tokens": 946
+      }
+    },
+    {
+      "id": "clean_003",
+      "evaluation_status": "critic_scored_adjudication_fallback",
+      "predicted_issue": true,
+      "expected_issue": false,
+      "verdict": "reject",
+      "expected_verdict": "accept",
+      "confidence": 0.35,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": true,
+      "elapsed_seconds": 64.128,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "factual_error",
+              "description": "The candidate answer incorrectly states that 17 multiplied by 6 equals 102, which is not the correct result.",
+              "evidence": "17 * 6 = 102.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer is logically consistent with the original prompt.",
+          "issues": [],
+          "overall_confidence": 1.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 1,
+          "summary": "The candidate answer is missing the requested multiplication operation and the result.",
+          "issues": [],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.35,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "factual_error",
+              "description": "The candidate answer incorrectly states that 17 multiplied by 6 equals 102, which is not the correct result.",
+              "evidence": "17 * 6 = 102.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "factual_accuracy"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "A conservative fallback verdict was produced because the adjudicator response could not be validated.",
+        "unresolved_disagreements": [
+          {
+            "topic": "factual_error",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "factual_error",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "Fallback used: Local adjudicator verdict conflicts with its issue resolutions.. Errors: none",
+        "recommended_revision": "Review the candidate answer and critic reports manually.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "factual_error"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 2,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1026,
+        "completion_tokens": 452,
+        "total_tokens": 1478
+      }
+    },
+    {
+      "id": "fact_false_003",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "reject",
+      "confidence": 0.9,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 57.174,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 2,
+          "summary": "The candidate answer contains an incorrect factual claim about the boiling point of water at standard atmospheric pressure.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that water boils at 50 degrees Celsius at standard atmospheric pressure, which is incorrect.",
+              "evidence": "Water boils at 50 degrees Celsius at standard atmospheric pressure.",
+              "severity": "high",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical inconsistency.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that water boils at 50 degrees Celsius at standard atmospheric pressure, which is incorrect.",
+              "evidence": "Water boils at 50 degrees Celsius at standard atmospheric pressure.",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 1,
+          "summary": "The candidate answer is incomplete as it does not provide the boiling point of water at standard atmospheric pressure.",
+          "issues": [],
+          "overall_confidence": 0.9,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.9,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that water boils at 50 degrees Celsius at standard atmospheric pressure, which is incorrect.",
+              "evidence": "Water boils at 50 degrees Celsius at standard atmospheric pressure.",
+              "severity": "high",
+              "confidence": 0.9
+            },
+            "critic_type": "factual_accuracy"
+          }
+        ],
+        "dismissed_flags": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer states that water boils at 50 degrees Celsius at standard atmospheric pressure, which is incorrect.",
+              "evidence": "Water boils at 50 degrees Celsius at standard atmospheric pressure.",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency",
+            "reason": "The candidate answer states that water boils at 50 degrees Celsius at standard atmospheric pressure, which is incorrect."
+          }
+        ],
+        "summary": "The candidate answer is dismissed due to the first issue being confirmed as unsupported, despite the second issue being dismissed as a false positive. The overall score is 1, indicating a high level of confidence in the dismissal of the first issue.",
+        "unresolved_disagreements": [
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "rationale": "The first issue is confirmed as unsupported, while the second issue is dismissed as a false positive. The overall score is 1, indicating a high level of confidence in the dismissal of the first issue.",
+        "recommended_revision": "The candidate answer should be revised to provide the correct boiling point of water at standard atmospheric pressure, which is 100 degrees Celsius.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 601,
+        "completion_tokens": 272,
+        "total_tokens": 873
+      }
+    },
+    {
+      "id": "fact_true_002",
+      "evaluation_status": "scored",
+      "predicted_issue": false,
+      "expected_issue": false,
+      "verdict": "accept",
+      "expected_verdict": "accept",
+      "confidence": 0.9,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 42.314,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer is correct, but it does not provide the freezing point of water at standard atmospheric pressure.",
+          "issues": [],
+          "overall_confidence": 0.9,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 5,
+          "summary": "The candidate answer logically follows the original prompt without any contradictions, unsupported conclusions, or invalid inferences.",
+          "issues": [],
+          "overall_confidence": 1.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 5,
+          "summary": "The candidate answer is complete and fully addresses the original request.",
+          "issues": [],
+          "overall_confidence": 1.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "Critic scores differ by 4 points (1 vs 5).",
+          "severity": "high",
+          "confidence": 0.9
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 4 points (1 vs 5).",
+          "severity": "high",
+          "confidence": 0.9
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "accept",
+        "overall_score": 4,
+        "confidence": 0.9,
+        "confirmed_issues": [],
+        "dismissed_flags": [],
+        "summary": "The candidate answer is confirmed as accurate and complete, with the only discrepancy being the logical consistency score, which is within the acceptable range.",
+        "unresolved_disagreements": [
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "Critic scores differ by 4 points (1 vs 5).",
+            "severity": "high",
+            "confidence": 0.9
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 4 points (1 vs 5).",
+            "severity": "high",
+            "confidence": 0.9
+          }
+        ],
+        "rationale": "The candidate answer correctly states the freezing point of pure water at standard atmospheric pressure, which is 0 degrees Celsius. The logical consistency score is within the acceptable range, and the completeness score is also within the acceptable range. The factual accuracy score is slightly lower, but it is still within the acceptable range. The overall score is 4 out of 5, which is within the acceptable range. The only issue is the logical consistency score, which is within the acceptable range. The candidate answer is confirmed as accurate and complete, with the only discrepancy being the logical consistency score, which is within the acceptable range.",
+        "recommended_revision": "The candidate answer is confirmed as accurate and complete, with the only discrepancy being the logical consistency score, which is within the acceptable range. The overall score is 4 out of 5, which is within the acceptable range. The only issue is the logical consistency score, which is within the acceptable range. The candidate answer is confirmed as accurate and complete, with the only discrepancy being the logical consistency score, which is within the acceptable range.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 429,
+        "completion_tokens": 312,
+        "total_tokens": 741
+      }
+    },
+    {
+      "id": "incomplete_003",
+      "evaluation_status": "critic_scored_adjudication_fallback",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.35,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": true,
+      "elapsed_seconds": 2529.868,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer is factual but does not provide an example.",
+          "issues": [
+            {
+              "category": "factual_error",
+              "description": "The candidate answer incorrectly states that a prime number is a positive integer greater than 1 with no positive divisors other than 1 and itself. This is not entirely accurate, as 1 is also a prime number.",
+              "evidence": "A prime number is a positive integer greater than 1 with no positive divisors other than 1 and itself.",
+              "severity": "low",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.9,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer does not provide a definition of a prime number, which is a requirement for the original request.",
+          "issues": [],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 3,
+          "summary": "The candidate answer is incomplete as it does not provide an example of a prime number.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide an example of a prime number.",
+              "evidence": "A prime number is a positive integer greater than 1 with no positive divisors other than 1 and itself.",
+              "severity": "low",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 2 points (1 vs 3).",
+          "severity": "medium",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 2 points (1 vs 3).",
+          "severity": "medium",
+          "confidence": 0.5
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.35,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "factual_error",
+              "description": "The candidate answer incorrectly states that a prime number is a positive integer greater than 1 with no positive divisors other than 1 and itself. This is not entirely accurate, as 1 is also a prime number.",
+              "evidence": "A prime number is a positive integer greater than 1 with no positive divisors other than 1 and itself.",
+              "severity": "low",
+              "confidence": 0.9
+            },
+            "critic_type": "factual_accuracy"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide an example of a prime number.",
+              "evidence": "A prime number is a positive integer greater than 1 with no positive divisors other than 1 and itself.",
+              "severity": "low",
+              "confidence": 0.9
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [],
+        "summary": "A conservative fallback verdict was produced because the adjudicator response could not be validated.",
+        "unresolved_disagreements": [
+          {
+            "topic": "factual_error",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "factual_error",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 2 points (1 vs 3).",
+            "severity": "medium",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 2 points (1 vs 3).",
+            "severity": "medium",
+            "confidence": 0.5
+          }
+        ],
+        "rationale": "Fallback used: Ollama local request timed out.. Errors: none",
+        "recommended_revision": "Review the candidate answer and critic reports manually.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "factual_error",
+        "incomplete_answer"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 2,
+        "successful_requests": 1,
+        "failed_requests": 1,
+        "status": "complete",
+        "prompt_tokens": 939,
+        "completion_tokens": 355,
+        "total_tokens": 1294
+      }
+    },
+    {
+      "id": "logic_004",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.9,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 221162.298,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide a clear conclusion based on the given information.",
+              "evidence": "Shape A is a square, so Shape A is not a rectangle.",
+              "severity": "low",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains a logical contradiction.",
+          "issues": [
+            {
+              "category": "logical_contradiction",
+              "description": "The answer states that Shape A is not a rectangle because it is a square, which contradicts the initial statement that every square is a rectangle.",
+              "evidence": "Shape A is a square, so Shape A is not a rectangle.",
+              "severity": "high",
+              "confidence": 1.0
+            }
+          ],
+          "overall_confidence": 0.9,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 2,
+          "summary": "The candidate answer is incomplete as it does not address the original request regarding whether Shape A is a rectangle.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer fails to address the original request by not providing information about whether Shape A is a rectangle.",
+              "evidence": "Shape A is a square, so Shape A is not a rectangle.",
+              "severity": "low",
+              "confidence": 0.9
+            }
+          ],
+          "overall_confidence": 0.8,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.5
+        },
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "low",
+          "confidence": 0.9
+        },
+        {
+          "topic": "logical_contradiction",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.9,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "logical_contradiction",
+              "description": "The answer states that Shape A is not a rectangle because it is a square, which contradicts the initial statement that every square is a rectangle.",
+              "evidence": "Shape A is a square, so Shape A is not a rectangle.",
+              "severity": "high",
+              "confidence": 1.0
+            },
+            "critic_type": "logical_consistency"
+          }
+        ],
+        "dismissed_flags": [
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide a clear conclusion based on the given information.",
+              "evidence": "Shape A is a square, so Shape A is not a rectangle.",
+              "severity": "low",
+              "confidence": 0.5
+            },
+            "critic_type": "factual_accuracy",
+            "reason": "The candidate answer does not provide a clear conclusion based on the given information."
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer fails to address the original request by not providing information about whether Shape A is a rectangle.",
+              "evidence": "Shape A is a square, so Shape A is not a rectangle.",
+              "severity": "low",
+              "confidence": 0.9
+            },
+            "critic_type": "completeness",
+            "reason": "The candidate answer fails to address the original request by not providing information about whether Shape A is a rectangle."
+          }
+        ],
+        "summary": "The candidate answer is dismissed due to logical contradictions and incomplete addressing of the original prompt. The answer incorrectly states that Shape A is not a rectangle because it is a square, which contradicts the initial statement that every square is a rectangle. Additionally, the answer fails to provide any information about whether Shape A is a rectangle, making it an incomplete answer. This combination of issues results in a dismissive verdict.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.5
+          },
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "low",
+            "confidence": 0.9
+          },
+          {
+            "topic": "logical_contradiction",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'logical_contradiction' while the other critic did not.",
+            "severity": "high",
+            "confidence": 1.0
+          }
+        ],
+        "rationale": "The candidate answer's logical contradiction and failure to address the original prompt's request for information about whether Shape A is a rectangle are confirmed issues. The answer's factual accuracy is also confirmed, but the logical consistency and completeness issues are dismissed as false positives. The overall score is 1, indicating a high level of confidence in the dismissal of the issues. The candidate answer is dismissed, and the final verdict is revise or reject. The candidate answer is dismissed due to logical contradictions and incomplete addressing of the original prompt. The answer incorrectly states that Shape A is not a rectangle because it is a square, which contradicts the initial statement that every square is a rectangle. Additionally, the answer fails to provide any information about whether Shape A is a rectangle, making it an incomplete answer. This combination of issues results in a dismissive verdict.",
+        "recommended_revision": "The candidate answer should be revised to provide information about whether Shape A is a rectangle, as it is not clear from the given information. The answer should also be corrected to accurately reflect the initial statement that every square is a rectangle.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "logical_contradiction"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 855,
+        "completion_tokens": 505,
+        "total_tokens": 1360
+      }
+    },
+    {
+      "id": "format_001",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": false,
+      "verdict": "reject",
+      "expected_verdict": "accept",
+      "confidence": 0.5,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 60.741,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains factual errors.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide a complete list of three items.",
+              "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)\n3. Rice (grain)",
+              "severity": "high",
+              "confidence": 0.5
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains logical inconsistencies.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly lists rice as a grain.",
+              "evidence": "3. Rice (grain)",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 5,
+          "summary": "The candidate answer is complete and fulfills the request.",
+          "issues": [],
+          "overall_confidence": 1.0,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 4 points (1 vs 5).",
+          "severity": "high",
+          "confidence": 0.5
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 4 points (1 vs 5).",
+          "severity": "high",
+          "confidence": 0.5
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 1,
+        "confidence": 0.5,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly lists rice as a grain.",
+              "evidence": "3. Rice (grain)",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "logical_consistency"
+          }
+        ],
+        "dismissed_flags": [
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide a complete list of three items.",
+              "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)\n3. Rice (grain)",
+              "severity": "high",
+              "confidence": 0.5
+            },
+            "critic_type": "factual_accuracy",
+            "reason": "The candidate answer is incomplete and does not provide a complete list of three items."
+          }
+        ],
+        "summary": "The candidate answer is dismissed due to two confirmed issues: 'incomplete_answer' and 'unsupported_claim'. The final verdict is 'reject' because the issues are not resolved by the provided evidence.",
+        "unresolved_disagreements": [
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 4 points (1 vs 5).",
+            "severity": "high",
+            "confidence": 0.5
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 4 points (1 vs 5).",
+            "severity": "high",
+            "confidence": 0.5
+          }
+        ],
+        "rationale": "The candidate answer fails to provide a complete list of three items (fruit, vegetable, grain) and incorrectly lists rice as a grain, which is not a grain but a grain product. The issues are confirmed and cannot be resolved by the evidence provided.",
+        "recommended_revision": "The candidate answer should be revised to provide a complete list of three items (fruit, vegetable, grain) and correctly identify rice as a grain product.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 894,
+        "completion_tokens": 283,
+        "total_tokens": 1177
+      }
+    },
+    {
+      "id": "format_002",
+      "evaluation_status": "scored",
+      "predicted_issue": true,
+      "expected_issue": true,
+      "verdict": "reject",
+      "expected_verdict": "revise",
+      "confidence": 0.5,
+      "critic_report_count": 3,
+      "critic_failure_count": 0,
+      "critic_failure_types": [],
+      "adjudication_fallback": false,
+      "elapsed_seconds": 67.274,
+      "critic_reports": [
+        {
+          "critic_type": "factual_accuracy",
+          "score": 1,
+          "summary": "The candidate answer contains an incorrect factual claim.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly identifies an apple as a fruit.",
+              "evidence": "1. Apple (fruit)",
+              "severity": "high",
+              "confidence": 0.8
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "logical_consistency",
+          "score": 1,
+          "summary": "The candidate answer contains logical inconsistencies.",
+          "issues": [
+            {
+              "category": "unsupported_claim",
+              "description": "The candidate answer provides only three items, but the original request asks for four items.",
+              "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+              "severity": "high",
+              "confidence": 1.0
+            }
+          ],
+          "overall_confidence": 0.5,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        },
+        {
+          "critic_type": "completeness",
+          "score": 3,
+          "summary": "The candidate answer is missing the required items and does not provide a complete list.",
+          "issues": [
+            {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the required items (fruit, vegetable, grain) and is missing the requested output format.",
+              "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+              "severity": "high",
+              "confidence": 1.0
+            }
+          ],
+          "overall_confidence": 0.9,
+          "model": "qwen2.5:1.5b",
+          "provider": "ollama"
+        }
+      ],
+      "disagreements": [
+        {
+          "topic": "unsupported_claim_evidence",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "Critics cited different evidence excerpts for unsupported_claim.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 2 points (1 vs 3).",
+          "severity": "medium",
+          "confidence": 0.5
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 2 points (1 vs 3).",
+          "severity": "medium",
+          "confidence": 0.5
+        }
+      ],
+      "adjudicator_output": {
+        "verdict": "reject",
+        "overall_score": 2,
+        "confidence": 0.5,
+        "confirmed_issues": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer provides only three items, but the original request asks for four items.",
+              "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+              "severity": "high",
+              "confidence": 1.0
+            },
+            "critic_type": "logical_consistency"
+          },
+          {
+            "issue": {
+              "category": "incomplete_answer",
+              "description": "The candidate answer does not provide the required items (fruit, vegetable, grain) and is missing the requested output format.",
+              "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+              "severity": "high",
+              "confidence": 1.0
+            },
+            "critic_type": "completeness"
+          }
+        ],
+        "dismissed_flags": [
+          {
+            "issue": {
+              "category": "unsupported_claim",
+              "description": "The candidate answer incorrectly identifies an apple as a fruit.",
+              "evidence": "1. Apple (fruit)",
+              "severity": "high",
+              "confidence": 0.8
+            },
+            "critic_type": "factual_accuracy",
+            "reason": "The candidate answer incorrectly identifies an apple as a fruit."
+          }
+        ],
+        "summary": "The candidate answer incorrectly identifies an apple as a fruit and provides only three items, but the original request asks for four items. The answer is incomplete and does not meet the requirement of providing the requested output format.",
+        "unresolved_disagreements": [
+          {
+            "topic": "unsupported_claim_evidence",
+            "critic_a": "factual_accuracy",
+            "critic_b": "logical_consistency",
+            "description": "Critics cited different evidence excerpts for unsupported_claim.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "factual_accuracy identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "factual_accuracy",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 2 points (1 vs 3).",
+            "severity": "medium",
+            "confidence": 0.5
+          },
+          {
+            "topic": "incomplete_answer",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          {
+            "topic": "unsupported_claim",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          {
+            "topic": "overall_score",
+            "critic_a": "logical_consistency",
+            "critic_b": "completeness",
+            "description": "Critic scores differ by 2 points (1 vs 3).",
+            "severity": "medium",
+            "confidence": 0.5
+          }
+        ],
+        "rationale": "The candidate answer incorrectly identifies an apple as a fruit, which is not accurate. Additionally, the answer provides only three items, but the original request asks for four items. The answer is incomplete and does not meet the requirement of providing the requested output format.",
+        "recommended_revision": "The candidate answer should be revised to provide the requested four items, including a grain.",
+        "adjudicator_provider": "ollama",
+        "adjudicator_model": "qwen2.5:1.5b"
+      },
+      "issue_categories": [
+        "incomplete_answer",
+        "unsupported_claim"
+      ],
+      "errors": [],
+      "token_usage": {
+        "requests": 1,
+        "successful_requests": 1,
+        "failed_requests": 0,
+        "status": "complete",
+        "prompt_tokens": 1043,
+        "completion_tokens": 327,
+        "total_tokens": 1370
+      }
+    }
+  ],
+  "note": "Metrics describe this run and dataset only; they are not a guarantee of general accuracy."
+}

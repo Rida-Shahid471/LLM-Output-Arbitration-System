@@ -1,19 +1,38 @@
 class ArbitrationError(Exception):
-    """Base exception for the arbitration system."""
+    """Base exception for expected arbitration failures."""
 
 
 class ConfigurationError(ArbitrationError):
-    """Raised when project configuration is invalid."""
+    pass
 
 
 class LLMProviderError(ArbitrationError):
-    """Raised when an LLM provider operation fails."""
+    pass
+
+
+class LLMNonRetryableProviderError(LLMProviderError):
+    """A provider rejected a request that retrying unchanged cannot fix."""
+
+
+class CriticResponseError(ArbitrationError):
+    pass
 
 
 class LLMTimeoutError(LLMProviderError):
-    """Raised when an LLM request times out."""
+    pass
 
 
 class LLMResponseError(LLMProviderError):
-    """Raised when an LLM response is invalid or unusable."""
-    
+    pass
+
+
+class LLMInputLimitError(ArbitrationError):
+    """Raised before a request is sent when its configured input budget is exceeded."""
+
+
+class PersistenceError(ArbitrationError):
+    pass
+
+
+class BatchPersistenceError(PersistenceError):
+    """A batch failed to persist atomically and was rolled back."""

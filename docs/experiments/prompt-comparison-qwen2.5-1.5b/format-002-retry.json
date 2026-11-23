@@ -1,0 +1,261 @@
+{
+  "experiment_id": "day16-factual-calibration-v1-format002-retry",
+  "status": "completed",
+  "started_at_utc": "2026-11-13T09:57:52.131025+00:00",
+  "completed_at_utc": "2026-11-13T09:59:17.507806+00:00",
+  "case_id": "format_002",
+  "provider": "ollama",
+  "model": "qwen2.5:1.5b",
+  "model_digest": "65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+  "dataset_version": "1.2.0",
+  "prompt_version": "day16-factual-calibration-v1",
+  "retry_reason": "Prior attempt had a logical critic response validation error; original attempt preserved.",
+  "elapsed_seconds": 85.376,
+  "token_usage": "not captured",
+  "arbitration_result": {
+    "arbitration_id": "3b8868e0-2cb0-4a40-a771-0a957a238a04",
+    "original_prompt": "Give exactly three items as a numbered list: one fruit, one vegetable, and one grain.",
+    "candidate_output": "1. Apple (fruit)\n2. Carrot (vegetable)",
+    "critic_reports": [
+      {
+        "critic_type": "factual_accuracy",
+        "score": 1,
+        "summary": "The candidate answer contains factual errors.",
+        "issues": [
+          {
+            "category": "factual_error",
+            "description": "The candidate answer incorrectly lists an apple as a fruit and a carrot as a vegetable.",
+            "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+            "severity": "high",
+            "confidence": 0.8
+          }
+        ],
+        "overall_confidence": 0.5,
+        "model": "qwen2.5:1.5b",
+        "provider": "ollama"
+      },
+      {
+        "critic_type": "logical_consistency",
+        "score": 1,
+        "summary": "The candidate answer contains logical inconsistencies.",
+        "issues": [
+          {
+            "category": "unsupported_claim",
+            "description": "The candidate answer provides only three items, but the original request asks for four items.",
+            "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+            "severity": "high",
+            "confidence": 1.0
+          }
+        ],
+        "overall_confidence": 0.5,
+        "model": "qwen2.5:1.5b",
+        "provider": "ollama"
+      },
+      {
+        "critic_type": "completeness",
+        "score": 3,
+        "summary": "The candidate answer is missing the required items and does not provide a complete list.",
+        "issues": [
+          {
+            "category": "incomplete_answer",
+            "description": "The candidate answer does not provide the required items (fruit, vegetable, grain) and is missing the requested output format.",
+            "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+            "severity": "high",
+            "confidence": 1.0
+          }
+        ],
+        "overall_confidence": 0.9,
+        "model": "qwen2.5:1.5b",
+        "provider": "ollama"
+      }
+    ],
+    "disagreements": [
+      {
+        "topic": "factual_error",
+        "critic_a": "factual_accuracy",
+        "critic_b": "logical_consistency",
+        "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+        "severity": "high",
+        "confidence": 0.8
+      },
+      {
+        "topic": "unsupported_claim",
+        "critic_a": "factual_accuracy",
+        "critic_b": "logical_consistency",
+        "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+        "severity": "high",
+        "confidence": 1.0
+      },
+      {
+        "topic": "factual_error",
+        "critic_a": "factual_accuracy",
+        "critic_b": "completeness",
+        "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+        "severity": "high",
+        "confidence": 0.8
+      },
+      {
+        "topic": "incomplete_answer",
+        "critic_a": "factual_accuracy",
+        "critic_b": "completeness",
+        "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+        "severity": "high",
+        "confidence": 1.0
+      },
+      {
+        "topic": "overall_score",
+        "critic_a": "factual_accuracy",
+        "critic_b": "completeness",
+        "description": "Critic scores differ by 2 points (1 vs 3).",
+        "severity": "medium",
+        "confidence": 0.5
+      },
+      {
+        "topic": "incomplete_answer",
+        "critic_a": "logical_consistency",
+        "critic_b": "completeness",
+        "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+        "severity": "high",
+        "confidence": 1.0
+      },
+      {
+        "topic": "unsupported_claim",
+        "critic_a": "logical_consistency",
+        "critic_b": "completeness",
+        "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+        "severity": "high",
+        "confidence": 1.0
+      },
+      {
+        "topic": "overall_score",
+        "critic_a": "logical_consistency",
+        "critic_b": "completeness",
+        "description": "Critic scores differ by 2 points (1 vs 3).",
+        "severity": "medium",
+        "confidence": 0.5
+      }
+    ],
+    "final_verdict": {
+      "verdict": "reject",
+      "overall_score": 2,
+      "confidence": 0.5,
+      "confirmed_issues": [
+        {
+          "issue": {
+            "category": "factual_error",
+            "description": "The candidate answer incorrectly lists an apple as a fruit and a carrot as a vegetable.",
+            "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+            "severity": "high",
+            "confidence": 0.8
+          },
+          "critic_type": "factual_accuracy"
+        },
+        {
+          "issue": {
+            "category": "unsupported_claim",
+            "description": "The candidate answer provides only three items, but the original request asks for four items.",
+            "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          "critic_type": "logical_consistency"
+        },
+        {
+          "issue": {
+            "category": "incomplete_answer",
+            "description": "The candidate answer does not provide the required items (fruit, vegetable, grain) and is missing the requested output format.",
+            "evidence": "1. Apple (fruit)\n2. Carrot (vegetable)",
+            "severity": "high",
+            "confidence": 1.0
+          },
+          "critic_type": "completeness"
+        }
+      ],
+      "dismissed_flags": [],
+      "summary": "The candidate answer incorrectly lists an apple as a fruit and a carrot as a vegetable, which is a factual error. The answer also does not provide the required items (fruit, vegetable, grain) and is missing the requested output format, which are logical inconsistencies. The overall score is 2 out of 4, indicating a moderate level of disagreement between the two critics.",
+      "unresolved_disagreements": [
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "factual_accuracy",
+          "critic_b": "logical_consistency",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "factual_error",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "factual_accuracy identified 'factual_error' while the other critic did not.",
+          "severity": "high",
+          "confidence": 0.8
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "factual_accuracy",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 2 points (1 vs 3).",
+          "severity": "medium",
+          "confidence": 0.5
+        },
+        {
+          "topic": "incomplete_answer",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "completeness identified 'incomplete_answer' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "unsupported_claim",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "logical_consistency identified 'unsupported_claim' while the other critic did not.",
+          "severity": "high",
+          "confidence": 1.0
+        },
+        {
+          "topic": "overall_score",
+          "critic_a": "logical_consistency",
+          "critic_b": "completeness",
+          "description": "Critic scores differ by 2 points (1 vs 3).",
+          "severity": "medium",
+          "confidence": 0.5
+        }
+      ],
+      "rationale": "The candidate answer contains factual errors and logical inconsistencies, which are confirmed by the critics. The overall score is moderate, indicating a moderate level of disagreement between the two critics. The final verdict is revise or reject, as the answer does not meet the requirements of the prompt.",
+      "recommended_revision": "The candidate answer should be revised to provide the required items (fruit, vegetable, grain) and be in the requested format.",
+      "adjudicator_provider": "ollama",
+      "adjudicator_model": "qwen2.5:1.5b"
+    },
+    "errors": [],
+    "timings_ms": {
+      "completeness_ms": 29409.78670000186,
+      "factual_accuracy_ms": 18313.461899997492,
+      "logical_consistency_ms": 38783.04619999835,
+      "disagreement_detection_ms": 0.27850000333273783,
+      "adjudication_ms": 46070.96040000033,
+      "total": 84877.69290000142
+    },
+    "provider": "ollama",
+    "created_at": "2026-11-13T09:59:17.507058+00:00",
+    "critic_prompt_version": "day16-factual-calibration-v1",
+    "adjudicator_prompt_version": "adjudicator-prompt-v3"
+  }
+}

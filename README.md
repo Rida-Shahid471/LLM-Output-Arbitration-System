@@ -1,732 +1,285 @@
 # LLM Output Arbitration System
 
-An AI engineering system for independently auditing LLM-generated answers, detecting disagreements between specialist critics, and producing an evidence-based final verdict.
+An audit service for an answer that an LLM has already generated. It runs independent critics for factual accuracy, logical consistency, and completeness, detects disagreements, asks an adjudicator to resolve reported issues, and stores a structured result. It evaluates answers; it does not generate a replacement answer.
 
----
+The `mock` provider is for local wiring and UI work. It returns deterministic placeholder judgments and does **not** evaluate meaning. Do not use mock metrics as model-quality results.
 
-## Overview
+## Features
 
-Large Language Models can produce answers that appear convincing while containing factual errors, logical inconsistencies, missing information, or unsupported conclusions.
+- Pydantic-validated requests, critic reports, disagreements, and verdicts.
+- Parallel LangGraph critic execution with per-critic timings, retries, and partial-result handling.
+- Atomic SQLite persistence for batch results; input validation happens before provider calls.
+- OpenAI, Anthropic, Ollama's OpenAI-compatible API, and deterministic mock provider.
+- Exact evidence quote validation against the candidate answer.
+- Deterministic disagreement detection and evidence-checked adjudication, including a unanimous-good shortcut.
+- SQLite audit history, single and batch API endpoints, retrieval, analytics, and a Streamlit explorer.
+- A versioned 21-case starter evaluation dataset, runner, case-level results, and failure counts.
+- Provider-returned model attribution, prompt-version metadata, configurable input-character/output-token budgets, and paginated history.
+- Docker Compose configuration for the API and UI.
 
-The **LLM Output Arbitration System** is designed to audit an already-generated LLM response rather than simply generate another response.
+## Architecture and workflow
 
-Given an original user prompt and a candidate LLM answer, the system evaluates the answer through three independent specialist critics:
+```mermaid
+flowchart LR
+    I[Prompt + candidate answer] --> P[Validate input]
+    P --> F[Factual critic]
+    P --> L[Logic critic]
+    P --> C[Completeness critic]
+    F --> R[Collect reports]
+    L --> R
+    C --> R
+    R --> D[Detect disagreements]
+    D --> A[Adjudicate and validate evidence]
+    A --> S[SQLite audit record]
+    S --> X[FastAPI / Streamlit / analytics]
+```
 
-1. **Factual Accuracy Critic**
-2. **Logical Consistency Critic**
-3. **Completeness Critic**
+Critic scores range from 1–5; final scores range from 1–10. Issue evidence must be an exact substring of the candidate answer. The adjudicator must confirm or dismiss every issue reported by critics. If a critic fails, the remaining critics continue and the result carries an error and reduced confidence.
 
-The system collects their structured reports, detects disagreements between critics, and sends the evidence to an adjudicator.
+## Technology
 
-The adjudicator produces a structured final verdict containing the overall assessment, confidence, confirmed issues, dismissed flags with reasoning, and a summary.
+Python 3.11+, Pydantic, LangGraph, FastAPI, SQLite, Streamlit, pandas, OpenAI SDK, Anthropic SDK, Docker Compose, and pytest.
 
-### Core flow
+## Project structure
 
 ```text
-Original Prompt + Candidate LLM Output
-                  │
-                  ▼
-            Input Parser
-                  │
-                  ▼
-        ┌─────────┼─────────┐
-        │         │         │
-        ▼         ▼         ▼
-    Factual     Logical   Completeness
-     Critic      Critic      Critic
-        │         │         │
-        └─────────┼─────────┘
-                  ▼
-        Critique Collection
-                  │
-                  ▼
-       Disagreement Detector
-                  │
-                  ▼
-            Adjudicator
-                  │
-                  ▼
-          Final Structured
-              Verdict
-                  │
-          ┌───────┼────────┐
-          ▼       ▼        ▼
-       Database   API    Dashboard
+src/                 Arbitration pipeline, providers, schemas, persistence, and evaluation
+ui/                  Streamlit verdict explorer
+scripts/             Evaluation and controlled prompt-comparison runners
+tests/               Offline regression suite, demo cases, and reviewed evaluation data
+docs/                Architecture, provider/deployment notes, experiment reports, and portfolio material
+docs/screenshots/    Genuine application screenshots
+docs/demo/           Recorded application walkthrough
+docs/experiments/    Reproducible baseline and prompt-comparison result artifacts
+Dockerfile           API/UI container image definition
+docker-compose.yml   Local API + dashboard deployment
+requirements.lock.txt  Reproducible Python dependency pins
 ```
 
----
+## Installation
 
-## Problem
+### Windows PowerShell
 
-A single LLM evaluation pass can miss important problems in a candidate answer.
-
-Different evaluation dimensions require different forms of analysis:
-
-* A factual evaluator needs to examine claims and supporting evidence.
-* A logical evaluator needs to examine reasoning, consistency, and conclusions.
-* A completeness evaluator needs to determine whether the answer addressed the full request.
-
-A single evaluator can also disagree with another evaluator.
-
-This project therefore treats answer evaluation as a structured arbitration problem:
-
-```text
-Candidate Answer
-      ↓
-Independent Critics
-      ↓
-Structured Reports
-      ↓
-Disagreement Detection
-      ↓
-Evidence-Based Adjudication
-      ↓
-Final Verdict
+```powershell
+py -3.11 -m venv .venv
+./.venv/Scripts/Activate.ps1
+python -m pip install -r requirements.lock.txt
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
----
+If the Python launcher is unavailable, use the full path to your Python 3.11 executable for `-m venv`, then activate the environment as above. On macOS/Linux, use `python3.11 -m venv .venv` and `source .venv/bin/activate`.
 
-## Objectives
-
-The system is designed to:
-
-* Audit an already-generated LLM response.
-* Separate evaluation into independent specialist critics.
-* Produce structured critic reports.
-* Detect disagreements between critics.
-* Preserve evidence behind identified issues.
-* Use an adjudicator to resolve conflicting findings.
-* Produce a structured final verdict.
-* Support single-output and batch arbitration.
-* Maintain an audit trail of arbitration results.
-* Expose the system through an API.
-* Provide a verdict exploration interface.
-* Track critic behavior and disagreement patterns.
-* Support repeatable evaluation using a versioned evaluation dataset.
-* Handle provider, timeout, malformed-output, and other expected failures gracefully.
-* Provide reproducible deployment through Docker.
-
----
-
-## System Inputs
-
-The primary arbitration input consists of:
-
-### 1. Original Prompt
-
-The original question or instruction given to the model.
-
-### 2. Candidate LLM Output
-
-The answer generated by the model that needs to be audited.
-
-Conceptually:
-
-```json
-{
-  "prompt": "Original user question",
-  "candidate_output": "LLM-generated answer"
-}
-```
-
----
-
-## System Outputs
-
-The system ultimately produces:
-
-* Three structured critic reports.
-* Detected disagreements.
-* A final overall quality score.
-* Final confidence.
-* Confirmed issues.
-* Dismissed flags with reasoning.
-* A final summary.
-* Audit/history information.
-
-The final verdict is intended to preserve the reasoning and evidence chain rather than returning only a single score.
-
----
-
-## Critics
-
-## 1. Factual Accuracy Critic
-
-The Factual Accuracy Critic evaluates whether claims made in the candidate answer are verifiable and internally consistent.
-
-It focuses on:
-
-* Factual claims.
-* Unsupported claims.
-* Contradictions.
-* Evidence associated with claims.
-* Severity of factual problems.
-* Confidence in the finding.
-
----
-
-## 2. Logical Consistency Critic
-
-The Logical Consistency Critic evaluates whether the reasoning in the candidate answer follows coherently.
-
-It focuses on:
-
-* Logical contradictions.
-* Unsupported conclusions.
-* Reasoning gaps.
-* Whether conclusions follow from the presented information.
-* Severity of logical problems.
-* Confidence in the finding.
-
----
-
-## 3. Completeness Critic
-
-The Completeness Critic evaluates whether the candidate answer adequately addresses the original request.
-
-It focuses on:
-
-* Missing requested information.
-* Unanswered parts of the prompt.
-* Important omissions.
-* Coverage of the original requirements.
-* Severity of completeness problems.
-* Confidence in the finding.
-
----
-
-## Structured Critic Reports
-
-Each critic produces a structured report rather than unstructured text.
-
-A critic report is expected to contain information such as:
-
-* Critic identity.
-* Overall score.
-* Identified issues.
-* Issue type.
-* Severity.
-* Confidence.
-* Quoted evidence.
-* Reasoning supporting the finding.
-
-The structured representation is designed to make critic outputs machine-readable and comparable.
-
----
-
-## Disagreement Detection
-
-The system does not assume that all critics will agree.
-
-The disagreement layer compares critic findings and identifies meaningful conflicts.
-
-Examples include:
-
-```text
-Factual Critic:
-Issue present
-
-Logical Critic:
-No issue
-
-Completeness Critic:
-Issue present
-```
-
-or:
-
-```text
-Critic A:
-Severity = High
-
-Critic B:
-Severity = Low
-```
-
-The disagreement detector identifies these conflicts so that the adjudicator can explicitly review them.
-
----
-
-## Evidence-Based Adjudication
-
-The adjudicator receives:
-
-* Original prompt.
-* Candidate answer.
-* Critic reports.
-* Detected disagreements.
-* Supporting evidence.
-
-The adjudicator evaluates the conflicting findings and produces a final structured result.
-
-The final result includes:
-
-* Overall quality score.
-* Confidence.
-* Confirmed issues.
-* Dismissed flags with reasoning.
-* Final summary.
-
-The adjudicator is therefore not simply calculating an average of critic scores. Its purpose is to resolve conflicts using the available evidence.
-
----
-
-## LLM Provider Abstraction
-
-The project uses a common LLM client abstraction so that critic logic is not tightly coupled to a single provider SDK.
-
-Conceptually:
-
-```text
-                Critic
-                  │
-                  ▼
-          Common LLM Client
-                  │
-       ┌──────────┼──────────┐
-       ▼          ▼          ▼
-    OpenAI     Anthropic    Ollama
-```
-
-A mock/local implementation can also be used during development and testing.
-
-This separation allows provider-specific implementation details to remain outside the critic logic.
-
----
-
-## Architecture Layers
-
-The system is organized into the following logical layers:
-
-1. **Input Layer**
-
-   * Receives the original prompt and candidate answer.
-
-2. **Critic Layer**
-
-   * Runs the three specialist critics.
-
-3. **Orchestration Layer**
-
-   * Coordinates the workflow using LangGraph.
-
-4. **Disagreement Layer**
-
-   * Compares findings and severity across critics.
-
-5. **Adjudication Layer**
-
-   * Resolves conflicting findings.
-
-6. **Persistence Layer**
-
-   * Stores arbitration records and audit history.
-
-7. **API Layer**
-
-   * Provides arbitration and retrieval endpoints.
-
-8. **UI Layer**
-
-   * Provides verdict exploration and batch-result views.
-
-9. **Analytics Layer**
-
-   * Tracks critic behavior, agreement, disagreement, failure patterns, and related metrics.
-
-10. **Deployment Layer**
-
-    * Provides reproducible containerized deployment.
-
----
-
-## Technology Stack
-
-The planned technology stack includes:
-
-| Area               | Technology                  |
-| ------------------ | --------------------------- |
-| Language           | Python 3.11+                |
-| Orchestration      | LangGraph                   |
-| LLM Providers      | OpenAI / Anthropic / Ollama |
-| Structured Outputs | Pydantic + Instructor       |
-| Persistence        | SQLite / JSON               |
-| API                | FastAPI                     |
-| UI                 | React or Streamlit          |
-| Deployment         | Docker / Docker Compose     |
-
----
-
-## Project Structure
-
-The project is being developed incrementally. The structure will grow as each system layer is implemented.
-
-The planned structure includes:
-
-```text
-LLM Output Arbitration System/
-│
-├── docs/
-│
-├── src/
-│   ├── config.py
-│   ├── errors.py
-│   ├── llm_client.py
-│   ├── logging_config.py
-│   ├── main.py
-│   │
-│   ├── critics/
-│   │   ├── factual.py
-│   │   ├── logical.py
-│   │   └── completeness.py
-│   │
-│   ├── schemas/
-│   │   ├── issue.py
-│   │   ├── critic_report.py
-│   │   ├── disagreement.py
-│   │   └── final_verdict.py
-│   │
-│   ├── prompts/
-│   │   ├── factual.py
-│   │   ├── logical.py
-│   │   └── completeness.py
-│   │
-│   ├── graph/
-│   │   ├── state.py
-│   │   └── workflow.py
-│   │
-│   └── utils/
-│       └── request_id.py
-│
-├── tests/
-│
-├── data/
-│
-├── .env.example
-├── .gitignore
-├── requirements.txt
-├── ARCHITECTURE.md
-├── SCOPE.md
-└── README.md
-```
-
-Individual components will be added as their corresponding development milestone is completed.
-
----
+The lockfile pins the dependency set used for fresh-environment verification. `requirements.txt` contains supported version ranges for dependency updates.
 
 ## Configuration
 
-Configuration is kept outside application code.
+Copy `.env.example` to `.env` and change only the settings needed for your provider. Never put credentials in source files, command history, experiment reports, or screenshots. `.env` is ignored by Git.
 
-The project uses environment variables for values such as:
+| Variable | Purpose |
+|---|---|
+| `APP_ENV` | Environment label. |
+| `LLM_PROVIDER` | `mock`, `openai`, `anthropic`, or `ollama`; defaults to `mock`. |
+| `LLM_MODEL` | Model identifier supported by the selected provider. Set this when changing from the example mock configuration. |
+| `OPENAI_API_KEY`, `ANTHROPIC_API_KEY` | Credentials required for those provider clients. |
+| `FACTUAL_PROVIDER`, `LOGICAL_PROVIDER`, `COMPLETENESS_PROVIDER` | Optional per-critic provider overrides. |
+| `FACTUAL_MODEL`, `LOGICAL_MODEL`, `COMPLETENESS_MODEL` | Optional per-critic model overrides. |
+| `LLM_TEMPERATURE` | Sampling temperature for OpenAI and Ollama-compatible clients; defaults to `0`. The Anthropic client omits this parameter because current Claude models/SDK versions reject it; record Anthropic runs as provider-default sampling. |
+| `LLM_TIMEOUT_SECONDS`, `LLM_MAX_RETRIES` | Provider timeout and retry count. |
+| `LLM_MAX_OUTPUT_TOKENS` | Maximum generated response tokens per provider call; defaults to `2048`. |
+| `MAX_PROVIDER_INPUT_CHARS` | Maximum combined system/user request characters checked before sending; defaults to `100000`. This character cap does not replace a model-specific tokenizer/context-window check. |
+| `OPENAI_MAX_INPUT_CHARS`, `ANTHROPIC_MAX_INPUT_CHARS`, `OLLAMA_MAX_INPUT_CHARS` | Provider-specific request character budgets; each defaults to `100000`. |
+| `OPENAI_MAX_OUTPUT_TOKENS`, `ANTHROPIC_MAX_OUTPUT_TOKENS`, `OLLAMA_MAX_OUTPUT_TOKENS` | Provider-specific output caps; the example configuration sets each to `2048`. If omitted, each falls back to `LLM_MAX_OUTPUT_TOKENS`. |
+| `FACTUAL_THRESHOLD`, `LOGICAL_THRESHOLD`, `COMPLETENESS_THRESHOLD` | Minimum scores used by the unanimous-good shortcut. |
+| `MAX_PROMPT_CHARS`, `MAX_ANSWER_CHARS`, `MAX_BATCH_SIZE` | Prompt/answer and batch limits. The synchronous batch default is `2`; the configurable maximum is `20`. The UI computes its request timeout from the configured per-call timeout and retry count. |
+| `DATABASE_PATH` | SQLite file path; defaults to `data/arbitrations.sqlite3`. |
+| `OLLAMA_BASE_URL` | Native/local Ollama endpoint; defaults to `http://localhost:11434/v1`. |
+| `OLLAMA_DOCKER_BASE_URL` | Compose Ollama host URL; defaults to `http://host.docker.internal:11434/v1`. |
+| `LOG_LEVEL` | Python logging level. |
 
-* LLM provider credentials.
-* Model names.
-* Request timeouts.
-* Retry settings.
-* Evaluation thresholds.
-* Logging configuration.
+Provider calls send the original prompt, candidate answer, and critic reports to the configured provider. Use only data you are permitted to share with that service.
 
-Secrets must not be committed to the repository.
+### Provider setup
 
-A `.env.example` file documents the required configuration variables without containing real credentials.
+- **OpenAI:** set `LLM_PROVIDER=openai`, a model identifier accepted by your account, and `OPENAI_API_KEY` in local `.env`.
+- **Anthropic:** set `LLM_PROVIDER=anthropic`, a model identifier accepted by your account, and `ANTHROPIC_API_KEY` in local `.env`.
+- **Ollama:** install Ollama, pull a local model, set `LLM_PROVIDER=ollama` and `LLM_MODEL` to that installed model. Native runs use `OLLAMA_BASE_URL`; Docker Compose uses `OLLAMA_DOCKER_BASE_URL`. A real local run with `qwen2.5:1.5b` is documented in [`docs/ollama-local-model-evaluation.md`](docs/ollama-local-model-evaluation.md); its measured false-positive rate was high, so do not treat it as a quality endorsement.
+- **Mock:** requires no credentials and does not make provider calls or perform semantic evaluation.
 
----
+The adapters use the provider SDKs' chat/messages request formats and enforce the shared JSON schema locally. Verify model access against the provider's [OpenAI chat API](https://platform.openai.com/docs/api-reference/chat/create), [Anthropic Messages API](https://docs.anthropic.com/en/api/messages), and [Ollama OpenAI compatibility reference](https://docs.ollama.com/api/openai-compatibility). Anthropic model and parameter availability changes over time; the client intentionally omits temperature for compatibility with current SDK/model behavior. The project does not verify account entitlements or model availability without a live request.
 
-## Development Principles
+The offline suite uses mocks and does not establish provider quality. A real local Ollama judgment and 20-case evaluation were run with `qwen2.5:1.5b`; see the evaluation report for results and telemetry limitations. OpenAI and Anthropic real-provider behavior has not been tested. Provider/model availability depends on the account or local Ollama installation.
 
-The project follows these engineering principles:
+## Run the API and UI
 
-## Separation of Concerns
+Start the API in one terminal and UI in another:
 
-Critic logic, orchestration, provider integrations, schemas, persistence, API and UI responsibilities are separated.
+```powershell
+uvicorn src.api:app --reload
+streamlit run ui/app.py
+```
 
-### Structured Outputs
+The API is at `http://localhost:8000`, OpenAPI docs at `http://localhost:8000/docs`, and UI at `http://localhost:8501`. `GET /v1/health/live` checks API liveness without initializing storage or contacting a provider. `GET /v1/health/ready` (also available at the compatibility route `/v1/health`) checks configuration/storage initialization and reports the selected provider; provider connectivity is explicitly not checked.
 
-LLM outputs are represented using structured schemas instead of relying on free-form text parsing wherever possible.
+Run a command-line sample:
 
-### Provider Independence
+```powershell
+python -m src.main --prompt "What is the capital of Australia?" --answer "The capital of Australia is Sydney."
+```
 
-Critics communicate through a common LLM client abstraction rather than being directly coupled to one provider.
-
-### Evidence Preservation
-
-Identified issues should retain supporting evidence so that final decisions can be inspected.
-
-### Explicit Disagreement Handling
-
-Conflicting critic findings are treated as first-class information rather than silently averaged away.
-
-### Failure Handling
-
-Provider failures, timeouts, malformed outputs and other expected failures should be handled explicitly.
-
-### Reproducibility
-
-Evaluation and deployment should be repeatable using versioned datasets, documented configuration and containerized deployment.
-
-### Measured Results
-
-Performance and evaluation claims will be based on actual measured results rather than assumed or invented numbers.
-
----
+In default mock mode this only exercises the pipeline; it does not identify the incorrect capital.
 
 ## API
 
-The planned API includes:
+All routes are under `/v1`:
 
-## Single Arbitration
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/arbitrate` | Audit one answer. |
+| `POST` | `/arbitrate/batch` | Audit multiple answers after validating the entire batch. |
+| `GET` | `/arbitrations/{arbitration_id}` | Retrieve a stored record without another model call. |
+| `GET` | `/arbitrations?limit=50&offset=0` | Browse stored history. |
+| `GET` | `/analytics` | Issue, pairwise agreement, failure, override, and timing aggregates. |
+| `GET` | `/health/live` | API liveness only; does not contact providers. |
+| `GET` | `/health/ready` | Configuration/storage readiness; provider connectivity is not checked. `/health` remains a compatibility alias. |
 
-```http
-POST /v1/arbitrate
+Single request:
+
+```json
+{"original_prompt":"What is 2 + 2?","candidate_answer":"2 + 2 = 4."}
 ```
 
-Submits one candidate output for arbitration.
+Batch request:
 
-### Batch Arbitration
-
-```http
-POST /v1/arbitrate/batch
+```json
+{"items":[{"original_prompt":"What is 2 + 2?","candidate_answer":"2 + 2 = 4."},{"original_prompt":"Name a primary color.","candidate_answer":"Red is a primary color."}]}
 ```
 
-Submits multiple candidate outputs for arbitration.
+Type-shaped response example (placeholder values, not a measured provider result):
 
-### Retrieve Arbitration
-
-```http
-GET /v1/arbitrations/{id}
+```json
+{
+  "arbitration_id":"generated-id",
+  "original_prompt":"What is 2 + 2?",
+  "candidate_output":"2 + 2 = 4.",
+  "critic_reports":[
+    {"critic_type":"factual_accuracy","score":5,"summary":"No issue reported.","issues":[],"overall_confidence":0.9,"provider":"configured-provider","model":"provider-returned-model"},
+    {"critic_type":"logical_consistency","score":5,"summary":"No issue reported.","issues":[],"overall_confidence":0.9,"provider":"configured-provider","model":"provider-returned-model"},
+    {"critic_type":"completeness","score":5,"summary":"No issue reported.","issues":[],"overall_confidence":0.9,"provider":"configured-provider","model":"provider-returned-model"}
+  ],
+  "disagreements":[],
+  "final_verdict":{"verdict":"accept","overall_score":10,"confidence":0.9,"confirmed_issues":[],"dismissed_flags":[],"summary":"All three critics independently found no issues and assigned a high score.","unresolved_disagreements":[],"rationale":"Unanimous-good shortcut","recommended_revision":null,"adjudicator_provider":"system_shortcut","adjudicator_model":null},
+  "errors":[],
+  "timings_ms":{"factual_accuracy_ms":10.0,"logical_consistency_ms":11.0,"completeness_ms":9.0,"disagreement_detection_ms":1.0,"adjudication_ms":0.1,"total":31.1},
+  "provider":"configured-provider",
+  "critic_prompt_version":"critic-prompts-v3",
+  "adjudicator_prompt_version":"adjudicator-prompt-v3",
+  "created_at":"2026-11-02T12:00:00+00:00"
+}
 ```
 
-Retrieves a stored arbitration result.
+Validation errors return 422. Batches above the configured `MAX_BATCH_SIZE` return 413; the absolute batch maximum is 20 and requests above that also return 413. Empty batches return 422. Missing history records return 404. Critic provider errors appear in `errors` with a partial result where possible. Valid batch results are committed in one SQLite transaction; a database insert failure rolls back that batch while preserving earlier records. Service or persistence initialization failures return 503.
 
-Additional endpoints such as analytics or health checks may be added as the implementation evolves.
+## Database and analytics
 
----
+SQLite creates an `arbitrations` table with `arbitration_id`, `created_at`, `verdict`, `overall_score`, and the complete result in `payload_json`, plus an index on descending creation time. Parent directories are created automatically. Batch inserts use a single transaction and do not replace records with matching IDs. There is no migration or automatic retention policy; manage backups and removal deliberately.
 
-## Evaluation
+Analytics count issue flags by critic/category, adjudicator-dismissed flags, critic failure types and affected critics, final-score distribution, total latency, and per-critic average latency. Agreement/disagreement rates are pairwise: the denominator is critic pairs where both reports exist; each pair is counted once even if it disagrees on multiple topics. Records with fewer than two reports do not contribute a pair.
 
-The project will use a versioned evaluation dataset rather than relying only on demonstration examples.
+Issue categories are normalized to a shared taxonomy (for example, `fact`, `incorrect fact`, and `factual error` become `factual_error`). Unknown categories remain visibly prefixed with `unknown:` so they do not silently merge with known categories. History is paginated in the UI in pages of 50 records.
 
-The evaluation dataset is planned to include:
+## Evaluation and experiments
 
-* Factual errors.
-* Logical contradictions.
-* Incomplete answers.
-* Correct answers.
-* Mixed-quality answers.
-* Ambiguous cases.
+`tests/evaluation_dataset.json` version 1.2.0 has 21 cases covering factual, logical, calculation, incomplete, clean, mixed, format, and ambiguous examples. Ambiguous cases are skipped and counted separately. `complete_001` specifies the traditional RYB color model so its expected clean verdict is no longer context-dependent. Dataset changes and their review rationale are recorded in [`docs/evaluation-dataset-review.md`](docs/evaluation-dataset-review.md), and the prior dataset is preserved as [`tests/evaluation_dataset.v1.1.1.pre-phase3-review.json`](tests/evaluation_dataset.v1.1.1.pre-phase3-review.json). This small starter set is not a benchmark.
 
-Evaluation will be repeatable and will keep reference labels separate from model-generated outputs.
+The human-reviewed set contains 20 approved/scorable cases and one ambiguous case (`ambiguous_001`), excluded before arbitration and from every scored metric. Actual local Ollama results are preserved separately from mock wiring checks:
 
-Where supported by the dataset, evaluation will measure relevant metrics such as:
+| Run | Scored cases | Precision | Recall | F1 | Clean-answer FPR | Verdict agreement | Interpretation |
+|---|---:|---:|---:|---:|---:|---:|---|
+| Baseline, `qwen2.5:1.5b` | 20/20 | 0.6842 | 1.0000 | 0.8125 | 0.8571 | 0.2143 (3/14) | Strong issue recall on this small set, but many clean answers were falsely flagged. |
+| Factual-critic prompt comparison, same model/data | 20/20 | 0.7222 | 1.0000 | 0.8387 | 0.7143 | 0.1765 (3/17) | Fewer clean-answer false positives in this run, but lower verdict agreement; this does not establish a general improvement. |
 
-* Issue-detection precision.
-* Issue-detection recall.
-* Clean-answer false-positive rate.
-* Adjudication agreement.
-* Average confidence.
+The raw run outputs and metadata are checked in under [`docs/experiments/`](docs/experiments/); the historical local artifacts remain preserved under ignored `tmp/`. The comparison changed only the factual-critic prompt. One failed `format_002` attempt is retained with its same-condition successful retry. See the [baseline evaluation](docs/ollama-local-model-evaluation.md) and [prompt-comparison report](docs/prompt-comparison-evaluation.md) for confusion counts, denominators, fallbacks, timing caveats, and case-level analysis.
 
-Actual results will be reported only after running the evaluation.
+```powershell
+python -m scripts.evaluate
+python -m scripts.evaluate --dataset tests/evaluation_dataset.json --output tmp/evaluation-report.json
+pytest
+```
 
----
+The report includes a UTC timestamp, configured and observed provider/model identifiers, dataset and prompt versions, input/output budgets, issue precision/recall, clean-answer false-positive rate, verdict agreement, confidence, metric denominator counts, typed critic failures, and case outcomes. Issue detection means at least one critic flagged an issue. Undefined ratios are `null` with a status field instead of being presented as zero. Cases with fewer than three successful critic reports are excluded from quality metric denominators and listed as unscored; ambiguous cases are skipped; adjudication fallback cases are excluded from verdict-agreement and confidence denominators. Review errors and false positives/negatives manually. Keep private reports out of Git.
 
-## Portfolio Test Cases
+The experiment log distinguishes the offline mock check from the real local Ollama run. The Ollama results are actual local-model judgments, with substantial false positives and low verdict agreement; the dataset is too small for general claims. OpenAI and Anthropic real-provider comparisons remain pending credentials and approval before any potentially paid API call. Temperature defaults to zero; record exact model and prompt revision for each run.
 
-The project includes four core demonstration scenarios:
+## Docker Compose
 
-1. **Factual Error**
+### Prerequisites
 
-   * The candidate answer contains a factual problem.
+Install Docker Desktop with the Linux container backend. On Windows, Docker's current requirements include a supported Windows build, WSL 2 version 2.1.5 or later for the WSL backend, hardware virtualization, and at least 8 GB RAM. See the [official Docker Desktop for Windows requirements](https://docs.docker.com/desktop/setup/install/windows-install/). This project was built and runtime-verified with Docker 29.9.3, Compose v5.7.0, Docker Desktop's Linux Engine 29.9.3, and WSL 3.0.5.0. Full measurements and test results are in [`docs/docker-deployment-verification.md`](docs/docker-deployment-verification.md).
 
-2. **Logical Flaw**
+### Build and start
 
-   * The candidate answer contains an invalid or inconsistent reasoning chain.
+```powershell
+docker compose --env-file .env.example build
+docker compose --env-file .env.example up -d api ui
+docker compose --env-file .env.example ps
+```
 
-3. **Incomplete Answer**
+The API is available at `http://127.0.0.1:8000`; OpenAPI is at `/docs`, liveness at `/v1/health/live`, and readiness at `/v1/health/ready`. The Streamlit dashboard is at `http://127.0.0.1:8501`. Both ports bind to loopback by default. The UI reaches the API over Compose networking at `http://api:8000`.
 
-   * The candidate answer fails to address part of the original request.
+Compose defaults to mock mode. The UI shows the configured provider and displays provider/model attribution for each result. It stores SQLite at `/app/data/arbitrations.sqlite3` in the named `arbitration-data` volume. `docker compose down` stops the services and preserves the volume. Avoid `docker compose down -v` when you need to preserve database records.
 
-4. **Good Answer**
-
-   * The candidate answer is genuinely acceptable across the evaluated dimensions.
-
-These cases are intended to demonstrate the complete evidence chain:
+For local Ollama inference, start Ollama on the Windows host and set these values in the local Compose environment before starting the stack:
 
 ```text
-Candidate Answer
-      ↓
-Three Critics
-      ↓
-Critic Reports
-      ↓
-Disagreement Detection
-      ↓
-Adjudication
-      ↓
-Final Verdict
+LLM_PROVIDER=ollama
+LLM_MODEL=qwen2.5:1.5b
+OLLAMA_DOCKER_BASE_URL=http://host.docker.internal:11434/v1
 ```
 
----
+In PowerShell, set these before starting Compose:
 
-## Audit Trail
-
-The system is designed to preserve an audit trail containing information such as:
-
-* Arbitration ID.
-* Original prompt.
-* Candidate output.
-* Critic reports.
-* Detected disagreements.
-* Final score.
-* Final confidence.
-* Confirmed issues.
-* Dismissed flags.
-* Adjudicator reasoning.
-* Final summary.
-
-This allows previous arbitration results to be inspected without requiring another LLM call.
-
----
-
-## Reliability and Failure Handling
-
-The system is designed to handle expected failures including:
-
-* LLM provider failures.
-* Request timeouts.
-* Retryable provider errors.
-* Malformed structured outputs.
-* Critic failures.
-* API validation errors.
-* Database errors.
-
-Failures should be logged with request identifiers while avoiding exposure of sensitive credentials.
-
----
-
-## Security
-
-Security considerations include:
-
-* Keeping API keys outside source code.
-* Using environment variables for secrets.
-* Never logging API keys.
-* Validating API inputs.
-* Applying safe input-size limits.
-* Reviewing dependencies.
-* Handling external provider failures safely.
-
----
-
-## Limitations
-
-LLM-based evaluation is itself imperfect.
-
-Potential limitations include:
-
-* Critics can make incorrect judgments.
-* Different models can share blind spots.
-* Confidence is not a guarantee of correctness.
-* Some factual claims require external verification.
-* Ambiguous prompts can make evaluation subjective.
-* Adjudication can also make mistakes.
-* Evaluation results depend on the quality and coverage of the evaluation dataset.
-
-These limitations will be evaluated and documented as the project develops.
-
----
-
-## Development Roadmap
-
-The project is being built incrementally through the following major phases:
-
-```text
-Foundation
-    ↓
-Structured Schemas
-    ↓
-Three Critics
-    ↓
-Parallel LangGraph Orchestration
-    ↓
-Disagreement Detection
-    ↓
-Adjudication
-    ↓
-Persistence
-    ↓
-API
-    ↓
-UI
-    ↓
-Analytics
-    ↓
-Evaluation Dataset
-    ↓
-Evaluation & Experiments
-    ↓
-Docker Deployment
-    ↓
-Security & Code Quality
-    ↓
-Portfolio Demo
-    ↓
-GitHub & Documentation
-    ↓
-Final Audit
+```powershell
+$env:LLM_PROVIDER = "ollama"
+$env:LLM_MODEL = "qwen2.5:1.5b"
+$env:OLLAMA_DOCKER_BASE_URL = "http://host.docker.internal:11434/v1"
+docker compose --env-file .env.example up -d api ui
 ```
 
----
+`OLLAMA_DOCKER_BASE_URL` is mapped to the API container's `OLLAMA_BASE_URL`; it is separate from the native Windows URL. The client uses a non-secret placeholder authorization value and does not forward `OPENAI_API_KEY`. Docker-to-Ollama access and real inference through both the API and dashboard were verified with the existing `qwen2.5:1.5b` model; the dashboard run used a deterministic fallback because the model's adjudicator response conflicted with its own issue resolutions. See the deployment report for details.
 
-## Current Development Status
+### Logs, shutdown, and troubleshooting
 
-The project is being implemented incrementally according to the engineering roadmap.
-
-The current foundation includes the development environment, configuration approach, LLM provider abstraction, request identification, logging, and basic error handling.
-
-Higher-level components such as structured critic schemas, specialist critics, orchestration, disagreement detection, adjudication, persistence, API, UI, analytics and evaluation are implemented in subsequent development stages.
-
----
-
-## Final Goal
-
-The final system is intended to provide a complete, auditable pipeline for evaluating LLM-generated answers:
-
-```text
-Original Prompt
-      +
-Candidate LLM Output
-      │
-      ▼
-Input Parsing
-      │
-      ▼
-Parallel Specialist Critics
-      │
-      ├── Factual Accuracy
-      ├── Logical Consistency
-      └── Completeness
-      │
-      ▼
-Critique Collection
-      │
-      ▼
-Disagreement Detection
-      │
-      ▼
-Evidence-Based Adjudication
-      │
-      ▼
-Final Structured Verdict
-      │
-      ├── Overall Score
-      ├── Confidence
-      ├── Confirmed Issues
-      ├── Dismissed Flags
-      └── Summary
-      │
-      ▼
-Persistence / API / Dashboard
+```powershell
+docker compose logs --tail 100 api ui
+docker compose down
 ```
 
-The final portfolio package will include the implementation, tests, evaluation dataset, Docker setup, API documentation, UI, evaluation report, demonstration material, architecture documentation and README.
+If the API is unhealthy, inspect `docker compose --env-file .env.example logs api` and check `/v1/health/live`. If the UI cannot reach the API, confirm it uses `http://api:8000` inside the Compose network. If local Ollama is unreachable, confirm the host service responds at port 11434, keep the model name local (`qwen2.5:1.5b`), and verify the `host.docker.internal` route from a container. See the [Docker deployment verification report](docs/docker-deployment-verification.md) for measured deployment results and known limitations.
+
+## UI screenshot and demo
+
+The UI displays the prompt and candidate answer with evidence markers: red for adjudicator-confirmed flags, yellow for low-confidence flags, and green where the quote matched but was not confirmed as a defect. Genuine captures from the running local Docker application are in [`docs/screenshots/`](docs/screenshots/). The screenshot set includes the dashboard, input/verdict, three critic reports, disagreement evidence, history, analytics, and live API documentation. The screenshots show real local Ollama judgments and operational history; they are not benchmark results. Analytics reflect the local demo's stored records, not the evaluation dataset. A few screenshots include the Streamlit pointer spotlight, and the historical analytics capture is narrower than the final video view.
+
+![Input, candidate answer, and final verdict](docs/screenshots/02-input-and-verdict.jpg)
+
+![Critic comparison and evidence](docs/screenshots/03-critic-reports.jpg)
+
+![History and operational analytics](docs/screenshots/06-history.jpg)
+
+The [demo recording guide](docs/demo-recording-guide.md) documents the actual walkthrough. A genuine, full-length 2:04 recording of the local application is available at [`docs/demo/llm-output-arbitration-demo.mp4`](docs/demo/llm-output-arbitration-demo.mp4). The 124.4 MiB original recording is preserved locally and excluded from ordinary Git tracking; the compressed copy is the intended repository asset. The video shows a real local Ollama arbitration, critic reports, disagreement evidence, history, and analytics; it is a workflow demonstration, not benchmark evidence.
+
+## Portfolio materials
+
+The [`docs/portfolio.md`](docs/portfolio.md) file contains a CV-ready project entry, a LinkedIn draft, interview topics, and limitations based on measured project evidence. No user counts, quality improvements, or production-scale claims are made.
+
+## Privacy, security, and limitations
+
+- The API has no authentication or rate limiting. Do not expose it publicly without verified access controls and deployment protections.
+- Docker Compose publishes both ports on `127.0.0.1` by default. This is a local/demo configuration, not a public deployment configuration.
+- Real evaluations send prompts, answers, and critic reports to the selected provider. Do not send confidential data unless permitted.
+- Provider judgments can be wrong. Confidence is not a guarantee, and factual checking may need external sources that this project does not fetch.
+- SQLite stores prompts, answers, and reports locally in plaintext. Restrict access and protect backups.
+- The included dataset is small and synthetic; it cannot establish general accuracy.
+- The global and provider-specific input budgets are pre-send character budgets, not exact tokenizers. Set them below the selected model's documented context budget with room for message overhead. Output limits use the provider-specific `*_MAX_OUTPUT_TOKENS` setting, falling back to `LLM_MAX_OUTPUT_TOKENS`; outputs are not silently truncated by this application.
+- OpenAI and Anthropic real-provider quality has not been verified; offline mocked SDK tests do not establish live behavior. Docker build/runtime and Docker-to-Ollama inference are documented in [`docs/docker-deployment-verification.md`](docs/docker-deployment-verification.md). The one-variable local prompt comparison is documented in [`docs/prompt-comparison-evaluation.md`](docs/prompt-comparison-evaluation.md); all 20 approved cases have final outcomes, with one disclosed same-condition retry after a critic response failure.
+- This is a local research/demo prototype, not a public service: authentication and rate limiting are not implemented, SQLite data is plaintext, and model evaluations use a small synthetic dataset. Review the architecture, security, privacy, and provider limitations before using real user content or exposing the API.

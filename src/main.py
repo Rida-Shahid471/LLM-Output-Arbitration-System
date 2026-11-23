@@ -1,44 +1,23 @@
-import logging
-
+import argparse
 from src.config import settings
-from src.llm_client import MockLLMClient
 from src.logging_config import setup_logging
-from src.utils.request_id import create_request_id
+from src.workflow import ArbitrationEngine
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Audit a candidate LLM answer.")
+    parser.add_argument("--prompt", help="Original user prompt")
+    parser.add_argument("--answer", help="Candidate LLM answer")
+    args = parser.parse_args()
     setup_logging(settings.log_level)
-
-    logger = logging.getLogger("arbitration")
-
-    request_id = create_request_id()
-
-    logger.info(
-        "Starting arbitration foundation | request_id=%s",
-        request_id,
-    )
-
-    logger.info(
-        "Environment=%s | model=%s | timeout=%s",
-        settings.app_env,
-        settings.openai_model,
-        settings.llm_timeout_seconds,
-    )
-
-    client = MockLLMClient()
-
-    response = client.generate(
-        prompt="Test prompt for Day 2.",
-    )
-
-    logger.info(
-        "LLM client response received | request_id=%s",
-        request_id,
-    )
-
-    print(response)
+    if bool(args.prompt) != bool(args.answer):
+        parser.error("--prompt and --answer must be supplied together.")
+    if not args.prompt:
+        args.prompt = "What is the capital of Australia?"
+        args.answer = "The capital of Australia is Sydney."
+    result = ArbitrationEngine().arbitrate(args.prompt, args.answer)
+    print(result.model_dump_json(indent=2))
 
 
 if __name__ == "__main__":
     main()
-    
